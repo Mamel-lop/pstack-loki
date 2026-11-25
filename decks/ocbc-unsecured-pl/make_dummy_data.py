@@ -68,14 +68,14 @@ for name, per100, rec in leaks:
     loans = round(lost_n * rec / 100)
     hrs = round(lost_n * hours_per_cancel) if name == "Cancellations" else 0
     e07.append([name, lost_n, rec, loans, ticket_mn, yield_pct,
-                round(loans * ticket_mn * yield_pct / 100 / 1000, 1), hrs])
+                round(loans * ticket_mn * yield_pct / 100 / 1000, 1), hrs, hours_per_cancel])
 rule_declines = round(total_apps * 14 / 100)
 low_risk_share = round((480 + 696) / (480 + 696 + 980 + 1000 + 764) * 100)
 loans = round(rule_declines * low_risk_share / 100)
 e07.append(["Rule declines (low-risk A-score)", rule_declines, low_risk_share, loans,
-            ticket_mn, yield_pct, round(loans * ticket_mn * yield_pct / 100 / 1000, 1), 0])
+            ticket_mn, yield_pct, round(loans * ticket_mn * yield_pct / 100 / 1000, 1), 0, hours_per_cancel])
 write("E07.csv", ["leak", "lost_applications_per_year", "recoverable_pct", "recoverable_loans",
-                  "avg_ticket_idr_mn", "yield_pct", "forgone_interest_idr_bn", "analyst_hours"], e07)
+                  "avg_ticket_idr_mn", "yield_pct", "forgone_interest_idr_bn", "analyst_hours", "hours_per_cancelled_file"], e07)
 loans_total = sum(r[3] for r in e07)
 
 # E09: options matrix
