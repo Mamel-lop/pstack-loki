@@ -504,23 +504,64 @@ for i, (h_, d) in enumerate(g):
     text(s, xx + 0.2, 2.85, 3.4, 0.6, h_, 20, True, RED)
     text(s, xx + 0.2, 3.6, 3.4, 2.2, d, 15, False, INK)
 
-# ---------------------------------------------------------------- S14
+# ---------------------------------------------------------------- S14 the ask
+pilot = {r["item"]: r["value"] for r in data("pilot")}
 s = slide("Decision today: approve the pilot, co-owned by Credit Risk and Consumer Lending", "Plan",
           None, None,
-          "This is the one thing I am asking for today. If we say yes, the first weekly leak report "
-          "arrives two weeks after start.")
-rect(s, 0.6, 2.3, 12.1, 2.2, LIGHT, "bg-ask")
-rect(s, 0.6, 2.3, 0.1, 2.2, RED, "bg-askrule")
-text(s, 1.0, 2.45, 11.5, 1.9,
-     "Approve a 12-week pilot of document pre-check, a decision-time SLA, and A-score review of rule-based "
-     "declines, co-owned by Credit Risk and Consumer Lending, starting [January 2027].",
-     20, True, INK, anchor=MSO_ANCHOR.MIDDLE, name="Ask")
-for i, (h_, d) in enumerate([("Week 2", "First weekly leak report"),
-                             ("Week 6", "Rule-change candidates to Credit Risk"),
-                             ("Week 12", "Go / no-go on scaling, with measured loss")]):
+          "This is the one thing I am asking for today. It is small, reversible, and measured: "
+          f"{pilot['analysts']} analysts and {pilot['credit_reviewers']} credit reviewer for {pilot['weeks']} weeks, "
+          "no policy change, and a go / no-go decision at the end with real loss data.")
+rect(s, 0.6, 2.2, 12.1, 1.35, LIGHT, "bg-ask")
+rect(s, 0.6, 2.2, 0.1, 1.35, RED, "bg-askrule")
+text(s, 1.0, 2.25, 11.5, 1.25,
+     f"Approve a {pilot['weeks']}-week pilot of document pre-check, a decision-time SLA, and A-score review of "
+     f"rule-based declines, co-owned by Credit Risk and Consumer Lending, starting [{pilot['start']}].",
+     18, True, INK, anchor=MSO_ANCHOR.MIDDLE, name="Ask")
+cols = [
+    ("What you approve", [f"{pilot['weeks']} weeks, one segment: {pilot['segment'].lower()}",
+                          f"Team: {pilot['analysts']} analysts + {pilot['credit_reviewers']} credit reviewer (assumed)",
+                          "No policy change; SLIK stays a hard limit"]),
+    ("What you get (est.)", [f"+{round(int(dloans), -1)} loans a month at full scale",
+                             f"About IDR {round(idr)} bn a year in interest income",
+                             f"Fewer of the ~{round(hrs, -3):,} analyst-hours a year lost to cancelled files"]),
+    ("When you will know", ["Week 2: first weekly leak report",
+                            "Week 6: rule-change candidates to Credit Risk",
+                            f"Week {pilot['weeks']}: go / no-go, with measured loss"]),
+]
+for i, (h_, items) in enumerate(cols):
     xx = 0.6 + i * 4.1
-    text(s, xx, 4.9, 3.8, 0.5, h_, 18, True, RED)
-    text(s, xx, 5.4, 3.8, 1.0, d, 15, False, INK)
+    rect(s, xx, 3.85, 3.8, 0.06, RED if i == 1 else GREY, f"bg-col{i}")
+    text(s, xx, 4.0, 3.8, 0.5, h_, 18, True, RED if i == 1 else INK, name=f"AskHead{i}")
+    text(s, xx, 4.55, 3.8, 2.2, items, 14, False, INK, name=f"AskBody{i}")
+
+# ---------------------------------------------------------------- Executive summary (built last, moved to slide 2)
+s = slide("We lose more good applicants to our own process than to credit risk", None,
+          "Executive summary", None,
+          "If you remember one slide, make it this one. Demand is there, but our own funnel loses most of it. "
+          "A safe subset can be won back without raising losses, and a 12-week pilot will prove it. "
+          "Today I am asking for approval of that pilot.", )
+blocks = [
+    ("What is happening", [f"Applications grew {g_app}% in 12 months; disbursed loans only {g_dis}%",
+                           f"Only {disb} of every 100 applications become a loan"]),
+    ("Why", [f"{round(proc / lost * 100)}% of lost applications never reach credit review (documents, slow decisions)",
+             f"Internal rules decline {ratio}x more applicants than SLIK",
+             f"{share}% of rule-declined applicants score as low-risk as our approved book"]),
+    ("What we propose", [f"{pilot['weeks']}-week pilot: document pre-check, decision SLA, A-score review",
+                         f"Est. +{round(int(dloans), -1)} loans a month and IDR {round(idr)} bn a year, at flat loss",
+                         "Guardrails pause the pilot if early losses rise"]),
+]
+for i, (h_, items) in enumerate(blocks):
+    yy = 2.35 + i * 1.35
+    rect(s, 0.6, yy, 0.08, 1.15, RED if i == 2 else GREY, f"bg-sumbar{i}")
+    text(s, 0.85, yy, 2.9, 1.15, h_, 18, True, RED if i == 2 else INK, anchor=MSO_ANCHOR.MIDDLE, name=f"SumHead{i}")
+    text(s, 3.8, yy, 8.9, 1.15, items, 14, False, INK, anchor=MSO_ANCHOR.MIDDLE, name=f"SumBody{i}")
+rect(s, 0.6, 6.4, 12.1, 0.42, INK, "bg-decision")
+text(s, 0.75, 6.4, 11.8, 0.42, "Decision today: approve the pilot, co-owned by Credit Risk and Consumer Lending",
+     14, True, WHITE, anchor=MSO_ANCHOR.MIDDLE, name="SumDecision")
+lst = prs.slides._sldIdLst
+el = list(lst)[-1]
+lst.remove(el)
+lst.insert(1, el)
 
 # ---------------------------------------------------------------- Appendix: mind map
 s = slide("Appendix: the issue tree behind the analysis", None,

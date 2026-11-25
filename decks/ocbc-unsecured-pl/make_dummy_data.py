@@ -88,4 +88,8 @@ write("E09.csv", ["criterion", "A_do_nothing", "B_process_only", "C_loosen_all",
     ["Cost", f"IDR {idr} bn/yr forgone", "Low", "Low", "Moderate"],
     ["Time to launch", "-", "4-6 weeks", "2 weeks", "8-12 weeks"],
 ])
+# Pilot resourcing (ASSUMPTION, to be agreed with Credit Risk / Consumer Lending)
+write("pilot.csv", ["item", "value"], [
+    ["weeks", 12], ["analysts", 2], ["credit_reviewers", 1], ["segment", "Salaried applicants, digital channel"],
+    ["start", "January 2027"]])
 print("dummy data written; total applications/yr =", total_apps, "; loans recoverable =", loans_total)

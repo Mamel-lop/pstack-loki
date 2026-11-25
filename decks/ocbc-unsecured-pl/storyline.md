@@ -35,6 +35,7 @@
 `S## | Act | TITLE | message detail | evidence | visual | status | transition-out`
 
 ```
+S00b| —   | EXEC SUMMARY: "We lose more good applicants to our own process than to credit risk" (what is happening / why / what we propose / decision today)
 S00 | —   | COVER: "Recovering lost unsecured-loan approvals at OCBC"  (subtitle: Graduate Program final presentation · name · date)
 S01 | I   | Applications grew 34% in 12 months; disbursed loans grew only 6%
             | demand is not the constraint | [D1] | exhibit E01 (two-line index chart) | FACT
@@ -141,3 +142,7 @@ or if SLIK, not internal rules, drives most credit declines.*
   title says "an estimated". C02: ladder synced to the as-built titles (dummy numbers). C03: S12 says
   "permanent rule change". C05: two-line titles accepted in STYLE.md. An OJK market slide was drafted, then
   cancelled by the author. Re-touch list: none beyond `deck.pptx`.
+- v0.3 (2026-11-25): author asked for a deck that sells the improvement to management. Added an executive
+  summary after the cover (answer first, Minto; it is a summary, not an agenda, so the Cold Open rule holds).
+  Rebuilt the ask slide as approve / get / know. Pilot resourcing (2 analysts + 1 credit reviewer) is an
+  ASSUMPTION in `data/pilot.csv`.
