@@ -122,18 +122,14 @@
 - [Kicker] Decision criteria, agreed before we look at the options
 - [DummyTag] ILLUSTRATIVE - DUMMY DATA
 - [Tracker] Situation  Problem  Stakes  Answer  Plan
-- [TextBox 7] 1
-- [TextBox 8] Loans added per month
-- [TextBox 9] Volume we can disburse on top of today
-- [TextBox 11] 2
-- [TextBox 12] Expected loss
-- [TextBox 13] Must stay flat; risk appetite is not on the table
-- [TextBox 15] 3
-- [TextBox 16] Cost
-- [TextBox 17] Including the cost of doing nothing
-- [TextBox 19] 4
-- [TextBox 20] Time to launch
-- [TextBox 21] How soon we see results
+- [TextBox 9] Loans added per month
+- [TextBox 10] Volume we can disburse on top of today
+- [TextBox 14] Expected loss
+- [TextBox 15] Must stay flat; risk appetite is not on the table
+- [TextBox 19] Cost
+- [TextBox 20] Including the cost of doing nothing
+- [TextBox 24] Time to launch
+- [TextBox 25] How soon we see results
 - [NOTES] Before I show the options, here are the four criteria I will judge them on. I am stating them first so the recommendation has to earn its place against them.
 
 ## S12
@@ -167,12 +163,12 @@
 - [Kicker] Pre-agreed triggers: we pause first and discuss second
 - [DummyTag] ILLUSTRATIVE - DUMMY DATA
 - [Tracker] Situation  Problem  Stakes  Answer  Plan
-- [TextBox 8] Loss trigger
-- [TextBox 9] Pause if 30+ DPD on pilot approvals exceeds the approved book's rate for the same band
-- [TextBox 12] Volume cap
-- [TextBox 13] Pilot approvals capped at a fixed monthly limit agreed with Credit Risk
-- [TextBox 16] Compliance
-- [TextBox 17] SLIK declines stay hard; OJK/POJK review before any permanent rule change
+- [TextBox 10] Loss trigger
+- [TextBox 11] Pause if 30+ DPD on pilot approvals exceeds the approved book's rate for the same band
+- [TextBox 16] Volume cap
+- [TextBox 17] Pilot approvals capped at a fixed monthly limit agreed with Credit Risk
+- [TextBox 22] Compliance
+- [TextBox 23] SLIK declines stay hard; OJK/POJK review before any permanent rule change
 - [NOTES] These guardrails are what make the pilot safe to say yes to. If early delinquency rises, we stop automatically, before any lasting change to policy.
 
 ## S15

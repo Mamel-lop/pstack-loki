@@ -11,3 +11,7 @@ chart tokens: grid #E5E5E5 0.5pt; direct labels instead of legends; accent vs gr
 figure style block: none. This deck is all-exhibit, so no generated imagery and no API key are needed
 theme intensity: 0. The beats run underneath and the panel sees a pure consulting surface
 compliance: aggregates only, no customer-level data; footer "Internal – Confidential"
+charts: rendered as PNG images by charts.py (matplotlib), so they display in Google Slides and on mobile.
+      The data stays in data/E##.csv; rebuild to update.
+icons: Lucide (ISC licence, icons/LICENSE-lucide.txt), red or ink, on a round badge. Used only on text
+      slides (summary, options, criteria, workplan, guardrails, ask); never on chart slides

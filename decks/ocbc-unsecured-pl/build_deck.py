@@ -6,6 +6,7 @@ Titles below are the storyline ladder with the dummy numbers filled in; when the
 data arrives, update the [TK] values in the titles to match the new CSVs.
 """
 import csv
+import charts
 from pathlib import Path
 
 from pptx import Presentation
@@ -140,19 +141,26 @@ def color_points(series, colors):
 
 def bar_chart(s, x, y, w, h, cats, vals, accents, kind=XL_CHART_TYPE.BAR_CLUSTERED, fmt='0',
               name="Exhibit", gap=60):
-    cd = CategoryChartData()
-    cd.categories = cats
-    cd.add_series("v", vals)
-    gf = s.shapes.add_chart(kind, Inches(x), Inches(y), Inches(w), Inches(h), cd)
-    gf.name = name
-    ch = gf.chart
-    style_chart(ch, fmt=fmt)
-    if kind == XL_CHART_TYPE.BAR_CLUSTERED:
-        ch.category_axis.reverse_order = True
-    ch.plots[0].gap_width = gap
-    color_points(ch.series[0], [RED if i in accents else GREY for i in range(len(vals))])
-    ch.value_axis.minimum_scale = 0
-    return ch
+    """Chart rendered as an image (see charts.py) so it shows in every viewer."""
+    f = {'0': "int", '0"%"': "pct", '#,##0': "int", '0.0"%"': "pct1"}[fmt]
+    path = charts.bars(name, w, h, cats, vals, accents, horizontal=kind == XL_CHART_TYPE.BAR_CLUSTERED, fmt=f)
+    pic = s.shapes.add_picture(str(path), Inches(x), Inches(y), Inches(w), Inches(h))
+    pic.name = name
+    return pic
+
+
+def icon(s, name, x, y, size=0.6, red=True):
+    """Lucide icon (ISC licence) on a round badge."""
+    c = s.shapes.add_shape(MSO_SHAPE.OVAL, Inches(x), Inches(y), Inches(size), Inches(size))
+    c.fill.solid()
+    c.fill.fore_color.rgb = RGBColor(0xFD, 0xE8, 0xE7) if red else LIGHT
+    c.line.fill.background()
+    c.shadow.inherit = False
+    c.name = f"bg-badge-{name}"
+    pad = size * 0.2
+    p_ = s.shapes.add_picture(str(HERE / "icons" / f"{name}-{'red' if red else 'ink'}.png"),
+                              Inches(x + pad), Inches(y + pad), Inches(size - 2 * pad), Inches(size - 2 * pad))
+    p_.name = f"bg-icon-{name}"
 
 
 def callout(s, x, y, w, h, s_text, name="Annotation"):
@@ -221,34 +229,11 @@ s = slide(f"Applications grew {g_app}% in 12 months; disbursed loans grew only {
           f"Applications went from {int(a0['applications']):,} to {int(a1['applications']):,} a month. Disbursed loans "
           f"barely moved, from {int(a0['disbursed']):,} to {int(a1['disbursed']):,}. So demand is not our constraint: "
           "something between application and disbursement is.")
-cd = CategoryChartData()
-cd.categories = [r["month"] for r in e01]
-cd.add_series("Applications", [float(r["applications_index"]) for r in e01])
-cd.add_series("Disbursed loans", [float(r["disbursed_index"]) for r in e01])
-gf = s.shapes.add_chart(XL_CHART_TYPE.LINE, Inches(0.6), Inches(2.3), Inches(9.4), Inches(4.5), cd)
-gf.name = "E01"
-ch = gf.chart
-style_chart(ch, labels=False, value_axis=True)
-va = ch.value_axis
-va.minimum_scale, va.maximum_scale = 90, 140
-va.tick_labels.font.size = Pt(11)
-va.has_title = True
-va.axis_title.text_frame.text = "Index (Dec-25 = 100); axis starts at 90"
-va.axis_title.text_frame.paragraphs[0].runs[0].font.size = Pt(10)
-va.axis_title.text_frame.paragraphs[0].runs[0].font.bold = False
-ch.category_axis.tick_labels.font.size = Pt(11)
-for ser, col in zip(ch.series, [RED, GREY]):
-    ser.smooth = False
-    ser.format.line.color.rgb = col
-    ser.format.line.width = Pt(3.5 if col == RED else 2.5)
-    from pptx.enum.chart import XL_MARKER_STYLE
-    ser.marker.style = XL_MARKER_STYLE.NONE
-    pt = ser.points[len(e01) - 1]
-    pt.data_label.has_text_frame = True
-    pt.data_label.text_frame.text = f"{ser.name}: {ser.values[-1]:.0f}"
-    pt.data_label.position = XL_LABEL_POSITION.ABOVE
-    pt.data_label.font.size, pt.data_label.font.bold = Pt(12), True
-    pt.data_label.font.color.rgb = col if col == RED else MUTED
+path = charts.lines("E01", 9.4, 4.5, [r["month"] for r in e01],
+                    [("Applications", [float(r["applications_index"]) for r in e01], True),
+                     ("Disbursed loans", [float(r["disbursed_index"]) for r in e01], False)],
+                    90, 140, "Index (Dec-25 = 100); axis starts at 90")
+s.shapes.add_picture(str(path), Inches(0.6), Inches(2.3), Inches(9.4), Inches(4.5)).name = "E01"
 callout(s, 10.3, 3.2, 2.5, 1.4, f"Demand rose {g_app}%; loans rose {g_dis}%")
 
 # ---------------------------------------------------------------- S02
@@ -356,29 +341,8 @@ s = slide(f"These losses cost about IDR {round(idr)} bn interest and {round(hrs,
           "are assumptions; the pilot will measure them.")
 cats = [r["leak"] for r in e07] + ["Total"]
 vals = [float(r["forgone_interest_idr_bn"]) for r in e07]
-base, run_ = [], 0
-for v in vals:
-    base.append(run_)
-    run_ += v
-cd = CategoryChartData()
-cd.categories = cats
-cd.add_series("base", base + [0])
-cd.add_series("value", vals + [round(idr, 1)])
-gf = s.shapes.add_chart(XL_CHART_TYPE.COLUMN_STACKED, Inches(0.6), Inches(2.3), Inches(7.6), Inches(4.5), cd)
-gf.name = "E07"
-ch = gf.chart
-style_chart(ch, labels=False)
-ch.plots[0].gap_width = 50
-ch.series[0].format.fill.background()
-ser = ch.series[1]
-color_points(ser, [GREY] * len(vals) + [RED])
-ser.data_labels.show_value = True
-ser.data_labels.number_format, ser.data_labels.number_format_is_linked = '0.0', False
-ser.data_labels.font.size, ser.data_labels.font.bold = Pt(13), True
-ser.data_labels.position = XL_LABEL_POSITION.INSIDE_END
-tl = ser.points[len(vals)].data_label
-tl.font.color.rgb, tl.font.size, tl.font.bold = WHITE, Pt(14), True
-tl.position = XL_LABEL_POSITION.INSIDE_END
+path = charts.waterfall("E07", 7.6, 4.5, cats, vals, round(idr, 1))
+s.shapes.add_picture(str(path), Inches(0.6), Inches(2.3), Inches(7.6), Inches(4.5)).name = "E07"
 r0 = e07[0]
 text(s, 8.6, 2.4, 4.2, 4.3, [
     "Method (estimate)",
@@ -398,20 +362,22 @@ s = slide("Loosening rules for everyone would add loans, but also add losses", "
           "and I want to give it a fair hearing. The problem is that rule declines span every risk band, "
           "so loosening everything lets in the riskiest bands too.")
 c9 = {r["criterion"]: r for r in e09}
-text(s, 0.6, 2.5, 5.8, 3.4, [
+icon(s, "zap", 0.6, 2.4, 0.6, red=False)
+icon(s, "triangle-alert", 6.9, 2.4, 0.6)
+text(s, 1.35, 2.5, 5.0, 3.4, [
     "Why it is tempting",
     f"Fastest volume: {c9['Loans added per month']['C_loosen_all']} loans a month",
     f"Fast to launch: {c9['Time to launch']['C_loosen_all']}",
     "No new tooling or process",
 ], 16, False, INK, name="ProsText")
-text(s, 6.9, 2.5, 5.8, 3.4, [
+text(s, 7.65, 2.5, 5.0, 3.4, [
     "Why it fails",
     f"Expected loss rises {c9['Expected loss']['C_loosen_all']} (estimate)",
     "Rule declines include bands D and E, where the approved book's bad rate is "
     f"{hi[0]['approved_bad_rate_pct']}% and {hi[1]['approved_bad_rate_pct']}%",
     "Moves risk appetite, which needs Credit Risk and Board sign-off",
 ], 16, False, INK, name="ConsText")
-for tb in (s.shapes[-2], s.shapes[-1]):
+for tb in (s.shapes[-2], s.shapes[-1]):  # the two text boxes just added
     tb.text_frame.paragraphs[0].runs[0].font.bold = True
 s.shapes[-1].text_frame.paragraphs[0].runs[0].font.color.rgb = RED
 rect(s, 6.6, 2.5, 0.02, 3.6, GREY)
@@ -450,7 +416,7 @@ crit = [("Loans added per month", "Volume we can disburse on top of today"),
 for i, (c, d) in enumerate(crit):
     xx = 0.6 + i * 3.05
     rect(s, xx, 2.6, 2.85, 0.08, RED)
-    text(s, xx, 2.8, 2.85, 0.5, f"{i + 1}", 32, True, RED)
+    icon(s, ["banknote", "shield-check", "wallet", "clock"][i], xx, 2.85, 0.75)
     text(s, xx, 3.6, 2.85, 0.6, c, 18, True, INK)
     text(s, xx, 4.3, 2.85, 1.4, d, 14, False, MUTED)
 
@@ -487,7 +453,9 @@ rows = [["Workstream", "What we do", "Weeks", "Output"],
          "Rule-change candidates"],
         ["4. A-score targeting", "Bands A-B rule declines go to manual review, capped volume", "4-12",
          "Approvals and early DPD vs control"]]
-table(s, 0.6, 2.4, 12.1, rows, col_w=[3.0, 5.3, 1.1, 2.7], size=13, row_h=0.75, name="Workplan")
+table(s, 1.45, 2.4, 11.25, rows, col_w=[2.75, 5.0, 0.9, 2.6], size=13, row_h=0.75, name="Workplan")
+for i, nm in enumerate(["chart-column", "file-check", "list-checks", "target"]):
+    icon(s, nm, 0.6, 3.15 + i * 0.75 + 0.1, 0.55, red=i == 3)
 
 # ---------------------------------------------------------------- S13
 s = slide("Three guardrails stop the pilot if early losses rise", "Plan",
@@ -501,7 +469,8 @@ for i, (h_, d) in enumerate(g):
     xx = 0.6 + i * 4.1
     rect(s, xx, 2.6, 3.8, 3.3, LIGHT, "bg-card")
     rect(s, xx, 2.6, 3.8, 0.08, RED, "bg-cardrule")
-    text(s, xx + 0.2, 2.85, 3.4, 0.6, h_, 20, True, RED)
+    icon(s, ["circle-pause", "gauge", "scale"][i], xx + 0.2, 2.85, 0.65)
+    text(s, xx + 0.95, 2.85, 2.7, 0.65, h_, 20, True, RED, anchor=MSO_ANCHOR.MIDDLE)
     text(s, xx + 0.2, 3.6, 3.4, 2.2, d, 15, False, INK)
 
 # ---------------------------------------------------------------- S14 the ask
@@ -531,7 +500,8 @@ cols = [
 for i, (h_, items) in enumerate(cols):
     xx = 0.6 + i * 4.1
     rect(s, xx, 3.85, 3.8, 0.06, RED if i == 1 else GREY, f"bg-col{i}")
-    text(s, xx, 4.0, 3.8, 0.5, h_, 18, True, RED if i == 1 else INK, name=f"AskHead{i}")
+    icon(s, ["circle-check", "coins", "calendar-check"][i], xx, 3.98, 0.55, red=i == 1)
+    text(s, xx + 0.7, 4.0, 3.1, 0.5, h_, 18, True, RED if i == 1 else INK, name=f"AskHead{i}")
     text(s, xx, 4.55, 3.8, 2.2, items, 14, False, INK, name=f"AskBody{i}")
 
 # ---------------------------------------------------------------- Executive summary (built last, moved to slide 2)
@@ -553,7 +523,8 @@ blocks = [
 for i, (h_, items) in enumerate(blocks):
     yy = 2.35 + i * 1.35
     rect(s, 0.6, yy, 0.08, 1.15, RED if i == 2 else GREY, f"bg-sumbar{i}")
-    text(s, 0.85, yy, 2.9, 1.15, h_, 18, True, RED if i == 2 else INK, anchor=MSO_ANCHOR.MIDDLE, name=f"SumHead{i}")
+    icon(s, ["trending-up", "search", "lightbulb"][i], 0.85, yy + 0.25, 0.65, red=i == 2)
+    text(s, 1.65, yy, 2.1, 1.15, h_, 18, True, RED if i == 2 else INK, anchor=MSO_ANCHOR.MIDDLE, name=f"SumHead{i}")
     text(s, 3.8, yy, 8.9, 1.15, items, 14, False, INK, anchor=MSO_ANCHOR.MIDDLE, name=f"SumBody{i}")
 rect(s, 0.6, 6.4, 12.1, 0.42, INK, "bg-decision")
 text(s, 0.75, 6.4, 11.8, 0.42, "Decision today: approve the pilot, co-owned by Credit Risk and Consumer Lending",
