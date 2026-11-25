@@ -1,8 +1,10 @@
-Open with one sentence: demand for unsecured loans is rising, but our disbursements are not. Today I will show where those applications go, what that costs us, and a pilot to win part of it back.
+Open with one sentence: demand for unsecured loans is rising, but our disbursements are not. Today I will show where those applications go, and how three machine-learning fixes can lift our approval rate by 5 points, about IDR 2 bn more disbursement a month, without raising losses.
 
-If you remember one slide, make it this one. Demand is there, but our own funnel loses most of it. A safe subset can be won back without raising losses, and a 12-week pilot will prove it. Today I am asking for approval of that pilot.
+If you remember one slide, make it this one. Demand is there, but our own funnel loses most of it. Three machine-learning fixes can win part of it back without raising losses, and a 12-week pilot will prove it. Today I am asking for approval of that pilot.
 
 Applications went from 2,000 to 2,680 a month. Disbursed loans barely moved, from 680 to 721. So demand is not our constraint: something between application and disbursement is.
+
+Here is the core problem in one line. While applications grew, our approval rate never moved: it stayed between 37.2% and 38.4% every month. Nothing we are doing today is closing the gap to the 43% target, so it will not close by itself.
 
 Follow 100 applications through the funnel. Only 30 end up as a loan. The rest of this deck is about the 70 we lose, and which of them we could keep.
 
@@ -14,7 +16,7 @@ Our median decision time is 7 days. Once a customer waits past 8 days, roughly a
 
 SLIK is a hard limit and should stay one. But SLIK declines only 5 in 100. Our own policy rules decline 14, and 81% of those applicants have a clean SLIK record.
 
-This is an estimate, and I show the method so you can challenge each input. The recoverable shares are assumptions; the pilot will measure them.
+This is an estimate, and I show the method so you can challenge each input. The uplift per leak is an assumption; together they lift the approval rate 5 points, from 38% to 43%. The pilot measures it.
 
 The obvious answer is to loosen the rules across the board. It is the fastest way to volume, and I want to give it a fair hearing. The problem is that rule declines span every risk band, so loosening everything lets in the riskiest bands too.
 
@@ -22,15 +24,19 @@ The A-score ranks every applicant, including those we declined. 1,176 rule-decli
 
 Before I show the options, here are the four criteria I will judge them on. I am stating them first so the recommendation has to earn its place against them.
 
-Option D is the only one that adds meaningful volume without moving expected loss. Option C adds more loans, but at a cost in loss we do not want. Doing nothing is not free: we forgo about IDR 35 bn/yr in interest income.
+Option D is the only one that adds meaningful volume without moving expected loss. Option C adds more, but at a cost in loss we do not want. Doing nothing is not free: we forgo about IDR 2 bn of disbursement every month.
+
+Here is how the machine learning works. One model per leak. The document checker reads uploads and flags problems before the file enters the queue. The fast-track model sends complete, low-risk files to an express decision, so fewer applicants give up waiting. The challenger model re-scores applicants our rules declined, using the A-score plus bureau and application data, and sends the low-risk ones to a credit officer. No model approves a loan on its own.
+
+The opportunity is there. What matters now is focus. Two moves, fixing documents at submission and re-scoring rule declines, deliver 4 of the 5 points, so they get our best people first. Speed is the third move. Each has one owner and one number we track every week.
 
 The four workstreams are the four solutions I started from. Each produces a measurable output, so by week 12 we have measured evidence instead of estimates.
 
 These guardrails are what make the pilot safe to say yes to. If early delinquency rises, we stop automatically, before any lasting change to policy.
 
-This is the one thing I am asking for today. It is small, reversible, and measured: 2 analysts and 1 credit reviewer for 12 weeks, no policy change, and a go / no-go decision at the end with real loss data.
+This is the one thing I am asking for today. It is small, reversible, and measured: 1 data scientist, 2 analysts and 1 credit reviewer for 12 weeks, no policy change, and a go / no-go decision at the end with real loss data.
 
-Let me close with three things to remember. First, this leak is ours to fix: most lost applications never reach a credit decision. Second, a safe subset exists, and the A-score can find it. Third, the bet is lopsided: we risk 12 weeks and 3 people under pause triggers, against an estimated IDR 35 bn a year. Every month we wait costs about IDR 3 bn. So my question is simple: can we start the pilot, and can I bring you the first leak report in two weeks?
+Let me close with three things to remember. First, this leak is ours to fix: most lost applications never reach a credit decision. Second, a safe subset exists, and machine learning with the A-score can find it. Third, the bet is lopsided: we risk 12 weeks and 4 people under pause triggers, against an estimated 5-point lift in approval rate. Every month we wait costs about IDR 2 bn of disbursement. So my question is simple: can we start the pilot, and can I bring you the first leak report in two weeks?
 
 Use this in Q&A when someone asks whether we considered a cause.
 

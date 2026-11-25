@@ -103,3 +103,27 @@ def waterfall(name, w, h, cats, vals, total):
     fig.savefig(path, facecolor="white")
     plt.close(fig)
     return path
+
+
+def trend_vs_target(name, w, h, cats, vals, target, ymin, ymax, ylabel):
+    fig, ax = plt.subplots(figsize=(w, h), dpi=DPI)
+    x = list(range(len(cats)))
+    ax.plot(x, vals, color=RED, linewidth=3.5, marker="o", markersize=5)
+    ax.axhline(target, color=MUTED, linewidth=1.5, linestyle="--")
+    ax.text(x[-1] + 0.2, target + 0.5, f"Target {target:g}%", va="bottom", color=MUTED, fontweight="bold")
+    ax.text(x[-1] + 0.2, vals[-1], f"{vals[-1]:g}%", va="center", color=RED, fontweight="bold")
+    ax.set_xticks(x, cats, fontsize=11)
+    ax.set_ylim(ymin, ymax)
+    ax.set_yticks([t for t in range(ymin, ymax + 1, 5) if t > ymin])
+    ax.set_xlim(-0.3, len(cats) + 1.4)
+    ax.set_ylabel(ylabel, fontsize=11)
+    ax.grid(axis="y", color="#E5E5E5", linewidth=0.6)
+    ax.set_axisbelow(True)
+    for side in ("top", "right"):
+        ax.spines[side].set_visible(False)
+    ax.tick_params(length=0)
+    fig.tight_layout()
+    path = OUT / f"{name}.png"
+    fig.savefig(path, facecolor="white")
+    plt.close(fig)
+    return path

@@ -1,5 +1,6 @@
-criterion,A_do_nothing,B_process_only,C_loosen_all,D_process_plus_ascore
-Loans added per month,0,+251,+420,+349
+criterion,A_do_nothing,B_process_only,C_loosen_all,D_ml_process_ascore
+Approval rate change,0,+3.0 pts,+7.0 pts,+5.0 pts
+Disbursement added per month,0,IDR 1.2 bn,IDR 2.8 bn,IDR 2.0 bn
 Expected loss,Unchanged,Unchanged,+60 bps,Flat (est.; pilot tests it)
-Cost,IDR 35 bn/yr forgone,Low,Low,Moderate
+Cost,IDR 2.0 bn/month forgone,Low,Low,Moderate (ML build + pilot)
 Time to launch,-,4-6 weeks,2 weeks,8-12 weeks

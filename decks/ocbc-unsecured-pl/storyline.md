@@ -30,55 +30,33 @@
 | High Noon | Answer | S10–S11 | Criteria first, then four real options, "do nothing" priced, and the recommendation. |
 | The New Order | Resolution | S12–S14 | Pilot plan mapped to the four proposed solutions, guardrails, the ask. |
 
-## Title ladder
-
-`S## | Act | TITLE | message detail | evidence | visual | status | transition-out`
+## Title ladder (as built, v0.5)
 
 ```
-S00b| —   | EXEC SUMMARY: "We lose more good applicants to our own process than to credit risk" (what is happening / why / what we propose / decision today)
-S00 | —   | COVER: "Recovering lost unsecured-loan approvals at OCBC"  (subtitle: Graduate Program final presentation · name · date)
-S01 | I   | Applications grew 34% in 12 months; disbursed loans grew only 6%
-            | demand is not the constraint | [D1] | exhibit E01 (two-line index chart) | FACT
-     ...therefore
-S02 | I   | Only 30 of every 100 applications become a disbursed loan
-            | the gap is inside our funnel | [D1] | exhibit E02 (funnel bar) | FACT
-     ...but
-S03 | II  | Two in three lost applications drop out before credit review, not at it
-            | process drop-outs > credit declines (hypothesis; see triage note 1) | [D1][D2] | exhibit E03 (100% stacked bar) | FACT once [D2] mapped
-     ...therefore
-S04 | II  | Invalid documents cause 60% of process drop-outs, led by payslips
-            | fixable at submission with a pre-check | [D4] | exhibit E04 (horizontal bar) | FACT
-     ...but
-S05 | II  | Even complete applicants cancel: our decision takes 7 days, median
-            | speed loses applicants to faster banks | [D3][D10] | exhibit E05 (histogram, cancels by day) | FACT (peer speed EST)
-     ...but
-S06 | II  | At credit review, internal rules decline 2.8x more applicants than SLIK does
-            | tightness is our policy, not bureau data | [D2][D5] | exhibit E06 (horizontal bar) | FACT
-     ...therefore
-S07 | III | These losses cost about IDR 35 bn interest and 8,000 analyst-hours yearly
-            | lost approvals × ticket × yield; wasted hours on cancelled files | [D1][D8][D9] | exhibit E07 (waterfall) | EST, method on slide
-     ...but
-S08 | III | Loosening rules for everyone would add loans, but also add losses
-            | steelman the easy answer; it fails risk appetite | [D7] | none (text + small table) | BELIEF/EST, disclosed
-     ...but
-S09 | III | 30% of rule-declined applicants score as low-risk as our approved book
-            | A-score finds the safe subset | [D6][D7] | exhibit E08 (bar by A-score band) | FACT
-     ...therefore
-S10 | IV  | We judge four options on loans added, loss, cost and launch time
-            | criteria stated before the reveal | — | none (criteria table) | —
-     ...therefore
-S11 | IV  | Process fixes plus A-score review add an estimated 350 loans monthly at flat loss
-            | options matrix; "do nothing" priced; recommendation in accent | [D1][D6][D7][D8] | exhibit E09 (options matrix) | EST
-     ...but
-S12 | V   | A 12-week pilot on one segment proves it before any permanent rule change
-            | 4 workstreams = the 4 proposed solutions | — | none (workplan) | —
-     ...but
-S13 | V   | Three guardrails stop the pilot if early losses rise
-            | DPD trigger, volume cap, OJK/SLIK compliance review | — | none | —
-     ...therefore
-S14 | V   | Decision today: approve the pilot, co-owned by Credit Risk and Consumer Lending
-            | the ask, verbatim | — | none | —
+S00 | —         | Recovering lost unsecured-loan approvals at OCBC
+S01 | —         | We lose more good applicants to our own process than to credit risk
+S02 | Situation | Applications grew 34% in 12 months; disbursed loans grew only 6%
+S03 | Situation | Approval rate has stuck near 38% for 12 months, despite rising demand
+S04 | Situation | Only 30 of every 100 applications become a disbursed loan
+S05 | Problem   | Two in three lost applications drop out before credit review, not at it
+S06 | Problem   | Invalid documents cause 60% of process drop-outs, led by payslips
+S07 | Problem   | Even complete applicants cancel: our decision takes 7 days, median
+S08 | Problem   | At credit review, internal rules decline 2.8x more applicants than SLIK does
+S09 | Stakes    | The three leaks cost about IDR 2 bn of disbursement every month
+S10 | Stakes    | Loosening rules for everyone would add loans, but also add losses
+S11 | Stakes    | 30% of rule-declined applicants score as low-risk as our approved book
+S12 | Answer    | We judge four options on volume added, loss, cost and launch time
+S13 | Answer    | ML-assisted fixes lift approval rate 5 points, adding IDR 2 bn monthly (est.)
+S14 | Answer    | Three ML models close the three leaks; credit officers keep the final say
+S15 | Answer    | The business should focus on documents and rule declines first: 4 of 5 points
+S16 | Plan      | A 12-week pilot on one segment proves it before any permanent rule change
+S17 | Plan      | Three guardrails stop the pilot if early losses rise
+S18 | Plan      | Decision today: approve the pilot, co-owned by Credit Risk and Consumer Lending
+S19 | Plan      | Each month of waiting forgoes IDR 2 bn disbursement; the pilot caps the risk
+S20 | —         | Appendix: the issue tree behind the analysis
 ```
+
+Connectives: S02 *but* S03 (stuck) *therefore* S04 … S13 (options) *therefore* S14 (how ML works) *therefore* S15 (where to focus) *but* S16 (prove it first) *but* S17 (guardrails) *therefore* S18–S19 (ask, close).
 
 **S11 footnote (mandatory):** *What would change our mind: if the back-test shows
 rule-declined applicants in low A-score bands default above the approved book's rate,
@@ -149,3 +127,8 @@ or if SLIK, not internal rules, drives most credit declines.*
 - v0.4 (2026-11-25): closing slide S16 added for management buy-in: "Every month we wait forgoes about
   IDR 3 bn; the pilot caps the downside". It has three takeaways, a risk-vs-gain panel, the cost of waiting,
   and the ask. All of its numbers derive from E07, E09 and pilot.csv (see data/derived.csv).
+- v0.5 (2026-11-25): author's target adopted: approval rate +5 pts (38% to 43%) and about IDR 2 bn more
+  disbursement a month. The impact model is rebuilt on that target (E07 and E09; average loan IDR 22 mn is an
+  assumption), replacing the IDR 35 bn / 350-loan estimates. The solution is now ML-powered (document checker,
+  fast-track, challenger model, all with human review). New S03 shows the approval rate flat all year (E11), and
+  new S15 says where the business must focus (two moves = 4 of 5 pts). The cover is now visual.

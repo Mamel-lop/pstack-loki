@@ -59,37 +59,47 @@ write("E08.csv", ["ascore_band", "rule_declined_count", "approved_bad_rate_pct",
     ["A (lowest risk)", 480, 1.2, 2.8], ["B", 696, 2.0, 2.8], ["C", 980, 3.1, 2.8],
     ["D", 1000, 5.5, 2.8], ["E (highest risk)", 764, 9.8, 2.8]])
 
-# E07: forgone interest by leak (EST). Recoverable share is an assumption.
-ticket_mn, yield_pct, hours_per_cancel = 60, 14, 1.5
-leaks = [("Invalid documents", 28, 25), ("Cancellations", 19, 20)]
+# E07: impact bridge (EST). Author's target: approval rate +5 percentage points (38% -> 43%)
+# and about IDR 2 bn more disbursement a month. Lever split and ticket size are ASSUMPTIONS.
+ticket_mn, hours_per_cancel = 22, 1.5
+apps_month = total_apps / 12
+disb_per_approved = 30 / 38                      # from E02: disbursed / approved
+levers = [  # (leak, ML lever, approval uplift in percentage points)
+    ("Invalid documents", "ML document checker at submission", 2.0),
+    ("Cancellations", "ML fast-track for low-risk complete files", 1.0),
+    ("Rule declines", "ML challenger model + A-score review", 2.0),
+]
 e07 = []
-for name, per100, rec in leaks:
-    lost_n = round(total_apps * per100 / 100)
-    loans = round(lost_n * rec / 100)
-    hrs = round(lost_n * hours_per_cancel) if name == "Cancellations" else 0
-    e07.append([name, lost_n, rec, loans, ticket_mn, yield_pct,
-                round(loans * ticket_mn * yield_pct / 100 / 1000, 1), hrs, hours_per_cancel])
-rule_declines = round(total_apps * 14 / 100)
-low_risk_share = round((480 + 696) / (480 + 696 + 980 + 1000 + 764) * 100)
-loans = round(rule_declines * low_risk_share / 100)
-e07.append(["Rule declines (low-risk A-score)", rule_declines, low_risk_share, loans,
-            ticket_mn, yield_pct, round(loans * ticket_mn * yield_pct / 100 / 1000, 1), 0, hours_per_cancel])
-write("E07.csv", ["leak", "lost_applications_per_year", "recoverable_pct", "recoverable_loans",
-                  "avg_ticket_idr_mn", "yield_pct", "forgone_interest_idr_bn", "analyst_hours", "hours_per_cancelled_file"], e07)
-loans_total = sum(r[3] for r in e07)
+for leak, lever, pp in levers:
+    approvals = apps_month * pp / 100
+    loans = approvals * disb_per_approved
+    hrs = round(total_apps * 19 / 100 * hours_per_cancel) if leak == "Cancellations" else 0
+    e07.append([leak, lever, pp, round(apps_month), round(approvals, 1), round(disb_per_approved, 3),
+                round(loans, 1), ticket_mn, round(loans * ticket_mn / 1000, 2), hrs, hours_per_cancel])
+write("E07.csv", ["leak", "ml_lever", "approval_uplift_pp", "applications_per_month", "extra_approvals_per_month",
+                  "disbursed_per_approved", "extra_loans_per_month", "avg_ticket_idr_mn",
+                  "disbursement_idr_bn_per_month", "analyst_hours_per_year", "hours_per_cancelled_file"], e07)
 
-# E09: options matrix
-b = round((e07[0][3] + e07[1][3]) / 12)
-d = round(loans_total / 12)
-idr = round(sum(r[6] for r in e07))
-write("E09.csv", ["criterion", "A_do_nothing", "B_process_only", "C_loosen_all", "D_process_plus_ascore"], [
-    ["Loans added per month", "0", f"+{b}", "+420", f"+{d}"],
+
+def disb_bn(pp):
+    return round(apps_month * pp / 100 * disb_per_approved * ticket_mn / 1000, 1)
+
+
+# E09: options matrix (EST)
+write("E09.csv", ["criterion", "A_do_nothing", "B_process_only", "C_loosen_all", "D_ml_process_ascore"], [
+    ["Approval rate change", "0", "+3.0 pts", "+7.0 pts", "+5.0 pts"],
+    ["Disbursement added per month", "0", f"IDR {disb_bn(3.0)} bn", f"IDR {disb_bn(7.0)} bn", f"IDR {disb_bn(5.0)} bn"],
     ["Expected loss", "Unchanged", "Unchanged", "+60 bps", "Flat (est.; pilot tests it)"],
-    ["Cost", f"IDR {idr} bn/yr forgone", "Low", "Low", "Moderate"],
+    ["Cost", f"IDR {disb_bn(5.0)} bn/month forgone", "Low", "Low", "Moderate (ML build + pilot)"],
     ["Time to launch", "-", "4-6 weeks", "2 weeks", "8-12 weeks"],
 ])
+loans_total = round(sum(r[6] for r in e07), 1)
 # Pilot resourcing (ASSUMPTION, to be agreed with Credit Risk / Consumer Lending)
 write("pilot.csv", ["item", "value"], [
-    ["weeks", 12], ["analysts", 2], ["credit_reviewers", 1], ["segment", "Salaried applicants, digital channel"],
+    ["weeks", 12], ["data_scientists", 1], ["analysts", 2], ["credit_reviewers", 1], ["segment", "Salaried applicants, digital channel"],
     ["start", "January 2027"]])
-print("dummy data written; total applications/yr =", total_apps, "; loans recoverable =", loans_total)
+print("dummy data written; apps/yr =", total_apps, "; extra loans/month =", loans_total, "; IDR bn/month =", disb_bn(5.0))
+
+# E11: monthly approval rate (approved per 100 submitted), flat all year (DUMMY)
+rates = [37.6, 38.1, 37.2, 38.4, 37.9, 38.0, 37.5, 38.3, 37.8, 38.2, 37.7, 38.1]
+write("E11.csv", ["month", "approval_rate_pct", "target_pct"], [[m, r, 43] for m, r in zip(months, rates)])

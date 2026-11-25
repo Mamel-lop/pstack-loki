@@ -204,21 +204,69 @@ e01, e02, e03, e04 = data("E01"), data("E02"), data("E03"), data("E04")
 e05, e06, e07, e08, e09 = data("E05"), data("E06"), data("E07"), data("E08"), data("E09")
 SRC = "Source: OCBC loan origination system, Dec-25 to Nov-26"
 
+# impact model (EST) from E07: author's target = approval rate +5 pts, about IDR 2 bn disbursement a month
+pp = derive("target approval uplift (pts)", round(sum(float(r["approval_uplift_pp"]) for r in e07), 1),
+            "sum E07 approval_uplift_pp")
+bn = derive("target disbursement IDR bn/month", round(sum(float(r["disbursement_idr_bn_per_month"]) for r in e07), 1),
+            "sum E07 disbursement_idr_bn_per_month, rounded")
+appr0 = int(next(r["per_100_applications"] for r in e02 if r["stage"] == "Approved"))
+appr1 = derive("target approval rate %", appr0 + round(pp), "E02 Approved + uplift")
+loans_m = derive("extra loans per month", round(sum(float(r["extra_loans_per_month"]) for r in e07)),
+                 "sum E07 extra_loans_per_month")
+hrs = derive("analyst hours a year on cancelled files", sum(int(r["analyst_hours_per_year"]) for r in e07),
+             "sum E07 analyst_hours_per_year")
+disb_pct = derive("share of approvals disbursed %", round(float(e07[0]["disbursed_per_approved"]) * 100),
+                  "E07 disbursed_per_approved x 100")
+hrs_r = derive("analyst hours a year (rounded)", round(hrs, -3), "round(hours, -3)")
+PP = f"{pp:g}"
+BN = f"{bn:g}"
+
 # ---------------------------------------------------------------- S00 cover
 s = prs.slides.add_slide(BLANK)
-rect(s, 0, 0, 0.35, 7.5, RED, "CoverBand")
-text(s, 1.0, 2.0, 11.0, 1.6, "Recovering lost unsecured-loan approvals at OCBC", 40, True, INK,
+rect(s, 0, 0, 0.25, 7.5, RED, "CoverBand")
+text(s, 0.8, 1.3, 6.4, 2.2, "Recovering lost unsecured-loan approvals at OCBC", 38, True, INK,
      anchor=MSO_ANCHOR.BOTTOM, name="Title")
-rect(s, 1.0, 3.75, 1.5, 0.07, RED)
-text(s, 1.0, 3.95, 11.0, 0.5,
-     "Where applications leak, what it costs, and a pilot to recover them at flat loss", 20, False, MUTED)
-text(s, 1.0, 5.6, 11.0, 0.9, ["Graduate Program final presentation", "[Your name]  ·  [Date]"], 14, False, INK)
-text(s, 1.0, 6.8, 6, 0.4, "Internal - Confidential", 9, False, MUTED)
+rect(s, 0.8, 3.65, 1.5, 0.07, RED)
+text(s, 0.8, 3.85, 6.4, 1.0, "Three machine-learning fixes to lift the approval rate at flat loss", 20, False, MUTED,
+     name="Subtitle")
+text(s, 0.8, 5.5, 6.4, 0.9, ["Graduate Program final presentation", "[Your name]  ·  [Date]"], 14, False, INK)
+text(s, 0.8, 6.85, 2.6, 0.4, "Internal - Confidential", 9, False, MUTED)
 if DUMMY:
-    text(s, 7.5, 6.8, 5.3, 0.4, "ILLUSTRATIVE - DUMMY DATA, NOT FOR DECISION", 10, True, RED, PP_ALIGN.RIGHT)
+    text(s, 3.6, 6.85, 3.6, 0.4, "ILLUSTRATIVE - DUMMY DATA", 9, True, RED, PP_ALIGN.RIGHT)
+# right visual panel
+rect(s, 7.6, 0, 5.733, 7.5, RED, "bg-coverpanel")
+PINK = RGBColor(0xF6, 0xB3, 0xAE)
+for i, w in enumerate([4.3, 3.6, 2.9, 2.2, 1.5]):
+    b_ = s.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(10.47 - w / 2), Inches(0.75 + i * 0.42),
+                            Inches(w), Inches(0.3))
+    b_.fill.solid()
+    b_.fill.fore_color.rgb = PINK if i < 4 else WHITE
+    b_.line.fill.background()
+    b_.shadow.inherit = False
+    b_.name = f"bg-funnel{i}"
+up = s.shapes.add_shape(MSO_SHAPE.UP_ARROW, Inches(12.15), Inches(1.45), Inches(0.45), Inches(1.0))
+up.fill.solid()
+up.fill.fore_color.rgb = WHITE
+up.line.fill.background()
+up.shadow.inherit = False
+up.name = "bg-uparrow"
+text(s, 8.2, 3.05, 4.6, 0.9, f"+{PP} pts", 44, True, WHITE, name="CoverStat1")
+text(s, 8.2, 3.97, 4.6, 0.4, f"approval rate, {appr0}% to {appr1}% (target)", 14, False, WHITE, name="CoverStat1Sub")
+text(s, 8.2, 4.5, 4.6, 0.9, f"IDR {BN} bn", 44, True, WHITE, name="CoverStat2")
+text(s, 8.2, 5.42, 4.6, 0.4, "more disbursement a month (target)", 14, False, WHITE, name="CoverStat2Sub")
+chip = s.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(8.2), Inches(6.2), Inches(4.4), Inches(0.62))
+chip.fill.solid()
+chip.fill.fore_color.rgb = WHITE
+chip.line.fill.background()
+chip.shadow.inherit = False
+chip.name = "bg-mlchip"
+s.shapes.add_picture(str(HERE / "icons" / "brain-circuit-red.png"), Inches(8.35), Inches(6.29), Inches(0.44),
+                     Inches(0.44)).name = "bg-mlicon"
+text(s, 8.9, 6.2, 3.6, 0.62, "Powered by machine learning", 15, True, RED, anchor=MSO_ANCHOR.MIDDLE, name="MLChip")
 s.notes_slide.notes_text_frame.text = (
     "Open with one sentence: demand for unsecured loans is rising, but our disbursements are not. "
-    "Today I will show where those applications go, what that costs us, and a pilot to win part of it back.")
+    f"Today I will show where those applications go, and how three machine-learning fixes can lift our approval "
+    f"rate by {PP} points, about IDR {BN} bn more disbursement a month, without raising losses.")
 
 # ---------------------------------------------------------------- S01
 a0, a1 = e01[0], e01[-1]
@@ -235,6 +283,21 @@ path = charts.lines("E01", 9.4, 4.5, [r["month"] for r in e01],
                     90, 140, "Index (Dec-25 = 100); axis starts at 90")
 s.shapes.add_picture(str(path), Inches(0.6), Inches(2.3), Inches(9.4), Inches(4.5)).name = "E01"
 callout(s, 10.3, 3.2, 2.5, 1.4, f"Demand rose {g_app}%; loans rose {g_dis}%")
+
+# ---------------------------------------------------------------- S01b approval rate flat
+e11 = data("E11")
+ar = [float(r["approval_rate_pct"]) for r in e11]
+ar_lo = derive("approval rate min %", min(ar), "min E11 approval_rate_pct")
+ar_hi = derive("approval rate max %", max(ar), "max E11 approval_rate_pct")
+s = slide(f"Approval rate has stuck near {appr0}% for 12 months, despite rising demand", "Situation",
+          "Approved applications per 100 submitted, monthly (%)", SRC,
+          f"Here is the core problem in one line. While applications grew, our approval rate never moved: it stayed "
+          f"between {ar_lo}% and {ar_hi}% every month. Nothing we are doing today is closing the gap to the "
+          f"{e11[0]['target_pct']}% target, so it will not close by itself.")
+path = charts.trend_vs_target("E11", 9.4, 4.5, [r["month"] for r in e11], ar, float(e11[0]["target_pct"]), 30, 50,
+                              "Approval rate (%); axis starts at 30")
+s.shapes.add_picture(str(path), Inches(0.6), Inches(2.3), Inches(9.4), Inches(4.5)).name = "E11"
+callout(s, 10.3, 3.0, 2.5, 1.7, f"Range {ar_lo}% to {ar_hi}% all year: no improvement yet")
 
 # ---------------------------------------------------------------- S02
 disb = int(e02[-1]["per_100_applications"])
@@ -329,30 +392,25 @@ bar_chart(s, 0.6, 2.3, 8.6, 4.2, [r["decline_reason"] for r in e06], [int(r["per
 callout(s, 9.6, 3.0, 3.2, 1.6, f"{e06[0]['clean_slik_pct']}% of rule declines have clean SLIK")
 
 # ---------------------------------------------------------------- S07
-idr = sum(float(r["forgone_interest_idr_bn"]) for r in e07)
-hrs = derive("S07 analyst hours (exact)", sum(int(r["analyst_hours"]) for r in e07), "sum E07 analyst_hours")
-derive("S07 interest IDR bn (exact)", round(idr, 1), "sum E07 forgone_interest_idr_bn")
-derive("S07 title IDR bn (rounded)", round(idr), "round(S07 exact)")
-derive("S07 title hours (rounded)", round(hrs, -3), "round(S07 hours, -3)")
-s = slide(f"These losses cost about IDR {round(idr)} bn interest and {round(hrs, -3):,} analyst-hours yearly",
-          "Stakes", "ESTIMATE: forgone first-year interest income from recoverable applications (IDR bn)",
-          SRC + "; estimate, method on slide",
-          "This is an estimate, and I show the method so you can challenge each input. The recoverable shares "
-          "are assumptions; the pilot will measure them.")
+s = slide(f"The three leaks cost about IDR {BN} bn of disbursement every month", "Stakes",
+          "ESTIMATE: recoverable disbursement per month, by leak (IDR bn)", SRC + "; estimate, method on slide",
+          "This is an estimate, and I show the method so you can challenge each input. The uplift per leak is an "
+          f"assumption; together they lift the approval rate {PP} points, from {appr0}% to {appr1}%. The pilot measures it.")
 cats = [r["leak"] for r in e07] + ["Total"]
-vals = [float(r["forgone_interest_idr_bn"]) for r in e07]
-path = charts.waterfall("E07", 7.6, 4.5, cats, vals, round(idr, 1))
+vals = [float(r["disbursement_idr_bn_per_month"]) for r in e07]
+path = charts.waterfall("E07", 7.6, 4.5, cats, vals, bn)
 s.shapes.add_picture(str(path), Inches(0.6), Inches(2.3), Inches(7.6), Inches(4.5)).name = "E07"
 r0 = e07[0]
 text(s, 8.6, 2.4, 4.2, 4.3, [
     "Method (estimate)",
-    f"Lost applications x recoverable share x IDR {r0['avg_ticket_idr_mn']} mn average ticket x "
-    f"{r0['yield_pct']}% yield",
-    "Recoverable share (assumed): " + "; ".join(f"{r['leak'].split(' (')[0].lower()} {r['recoverable_pct']}%"
-                                                for r in e07),
-    f"Analyst time: {int(e07[1]['lost_applications_per_year']):,} cancelled files x "
-    f"{e07[1]['hours_per_cancelled_file']} h = {hrs:,} h",
+    f"Applications a month ({int(r0['applications_per_month']):,}) x approval-rate uplift x {disb_pct}% of approvals "
+    f"disbursed x IDR {r0['avg_ticket_idr_mn']} mn average loan",
+    "Uplift (assumed): " + "; ".join(f"{r['leak'].lower()} +{r['approval_uplift_pp']} pts" for r in e07)
+    + f" = +{PP} pts ({appr0}% to {appr1}%)",
+    f"About {loans_m} extra loans a month",
+    f"Analyst time: {hrs:,} h a year on files that later cancel ({e07[1]['hours_per_cancelled_file']} h each)",
 ], 12, False, INK, name="Method")
+s.shapes[-1].text_frame.paragraphs[0].runs[0].font.bold = True
 
 # ---------------------------------------------------------------- S08
 hi = [r for r in e08 if r["ascore_band"][0] in "DE"]
@@ -366,7 +424,8 @@ icon(s, "zap", 0.6, 2.4, 0.6, red=False)
 icon(s, "triangle-alert", 6.9, 2.4, 0.6)
 text(s, 1.35, 2.5, 5.0, 3.4, [
     "Why it is tempting",
-    f"Fastest volume: {c9['Loans added per month']['C_loosen_all']} loans a month",
+    f"Most volume: {c9['Approval rate change']['C_loosen_all']} approval rate, "
+    f"{c9['Disbursement added per month']['C_loosen_all']} a month",
     f"Fast to launch: {c9['Time to launch']['C_loosen_all']}",
     "No new tooling or process",
 ], 16, False, INK, name="ProsText")
@@ -405,11 +464,11 @@ text(s, 9.6, 5.0, 3.2, 1.6, "Inferred risk: declined applicants have no repaymen
      11, False, MUTED)
 
 # ---------------------------------------------------------------- S10
-s = slide("We judge four options on loans added, loss, cost and launch time", "Answer",
+s = slide("We judge four options on volume added, loss, cost and launch time", "Answer",
           "Decision criteria, agreed before we look at the options", None,
           "Before I show the options, here are the four criteria I will judge them on. I am stating them "
           "first so the recommendation has to earn its place against them.")
-crit = [("Loans added per month", "Volume we can disburse on top of today"),
+crit = [("Volume added", "Approval-rate points and disbursement a month on top of today"),
         ("Expected loss", "Must stay flat; risk appetite is not on the table"),
         ("Cost", "Including the cost of doing nothing"),
         ("Time to launch", "How soon we see results")]
@@ -421,24 +480,103 @@ for i, (c, d) in enumerate(crit):
     text(s, xx, 4.3, 2.85, 1.4, d, 14, False, MUTED)
 
 # ---------------------------------------------------------------- S11
-dloans = c9["Loans added per month"]["D_process_plus_ascore"].lstrip("+")
-derive("S11 title loans/month (rounded)", round(int(dloans), -1), "round(E09 D loans added, -1)")
-s = slide(f"Process fixes plus A-score review add an estimated {round(int(dloans), -1)} loans monthly at flat loss",
-          "Answer", None, "Source: estimates from data/E07-E09; loss impact from approved-book bad rate by band",
+s = slide(f"ML-assisted fixes lift approval rate {PP} points, adding IDR {BN} bn monthly (est.)",
+          "Answer", None, "Source: estimates from data/E07 and E09; loss impact from approved-book bad rate by band",
           "Option D is the only one that adds meaningful volume without moving expected loss. Option C adds "
-          "more loans, but at a cost in loss we do not want. Doing nothing is not free: we forgo about "
-          f"{c9['Cost']['A_do_nothing'].replace(' forgone', '')} in interest income.")
-rows = [["", "A. Do nothing", "B. Process fixes only", "C. Loosen rules for all", "D. Process fixes + A-score (recommended)"]]
+          "more, but at a cost in loss we do not want. Doing nothing is not free: we forgo about "
+          f"IDR {BN} bn of disbursement every month.")
+rows = [["", "A. Do nothing", "B. Process fixes only", "C. Loosen rules for all", "D. ML + process fixes + A-score (recommended)"]]
 for r in e09:
-    rows.append([r["criterion"] + (" (est.)" if r["criterion"] in ("Loans added per month", "Expected loss") else ""),
-                 r["A_do_nothing"], r["B_process_only"], r["C_loosen_all"], r["D_process_plus_ascore"]])
-table(s, 0.6, 1.95, 12.1, rows, col_w=[2.3, 2.2, 2.3, 2.3, 3.0], hl_col=4, size=14, row_h=0.72, name="E09")
-text(s, 0.6, 5.75, 12.1, 0.6,
+    est = r["criterion"] in ("Approval rate change", "Disbursement added per month", "Expected loss")
+    rows.append([r["criterion"] + (" (est.)" if est else ""),
+                 r["A_do_nothing"], r["B_process_only"], r["C_loosen_all"], r["D_ml_process_ascore"]])
+table(s, 0.6, 1.95, 12.1, rows, col_w=[2.4, 2.1, 2.2, 2.3, 3.1], hl_col=4, size=13, row_h=0.62, name="E09")
+text(s, 0.6, 5.85, 12.1, 0.55,
      "What would change our mind: if the back-test shows rule-declined applicants in bands A-B default above "
      "the approved book's rate, or if SLIK, not internal rules, drives most credit declines.",
      12, False, MUTED, name="Falsifier")
-text(s, 0.6, 6.45, 12.1, 0.4, "Loans added = recoverable loans per year (data/E07) / 12. Estimates; the pilot measures them.",
+text(s, 0.6, 6.45, 12.1, 0.4, f"Disbursement = applications a month x approval uplift x {disb_pct}% disbursed x "
+     f"IDR {e07[0]['avg_ticket_idr_mn']} mn average loan (data/E07). Estimates; the pilot measures them.",
      10, False, MUTED, name="Derivation")
+
+# ---------------------------------------------------------------- S11b how ML powers the fix
+s = slide("Three ML models close the three leaks; credit officers keep the final say", "Answer",
+          "One model per leak, each with an estimated approval-rate lift", None,
+          "Here is how the machine learning works. One model per leak. The document checker reads uploads and "
+          "flags problems before the file enters the queue. The fast-track model sends complete, low-risk files to "
+          "an express decision, so fewer applicants give up waiting. The challenger model re-scores applicants our "
+          "rules declined, using the A-score plus bureau and application data, and sends the low-risk ones to a "
+          "credit officer. No model approves a loan on its own.")
+ml = [("At submission", "scan-text", "ML document checker",
+       "Reads payslips, bank statements and KTP at upload; flags missing or invalid items before the queue",
+       "OCR + document classifier"),
+      ("In the queue", "zap", "ML fast-track",
+       "Routes complete, low-risk files to an express decision, so fewer applicants cancel while waiting",
+       "Gradient-boosted routing model"),
+      ("At credit review", "brain-circuit", "ML challenger model",
+       "Re-scores rule-declined applicants with A-score, SLIK and application data; low-risk ones go to an officer",
+       "Gradient boosting, champion vs challenger")]
+for i, ((stage, ic, name_, what, tech), r) in enumerate(zip(ml, e07)):
+    xx = 0.6 + i * 4.1
+    text(s, xx, 2.3, 3.8, 0.35, stage.upper(), 11, True, MUTED, name=f"MLStage{i}")
+    rect(s, xx, 2.7, 3.8, 2.75, LIGHT, f"bg-mlcard{i}")
+    rect(s, xx, 2.7, 3.8, 0.07, RED, f"bg-mlrule{i}")
+    icon(s, ic, xx + 0.2, 2.9, 0.65)
+    text(s, xx + 0.95, 2.9, 2.75, 0.65, name_, 17, True, INK, anchor=MSO_ANCHOR.MIDDLE, name=f"MLName{i}")
+    text(s, xx + 0.2, 3.65, 3.45, 1.05, what, 12, False, INK, name=f"MLWhat{i}")
+    text(s, xx + 0.2, 4.85, 2.3, 0.5, tech, 10, False, MUTED, name=f"MLTech{i}")
+    text(s, xx + 2.5, 4.75, 1.2, 0.6, f"+{r['approval_uplift_pp']} pts", 18, True, RED, PP_ALIGN.RIGHT,
+         anchor=MSO_ANCHOR.MIDDLE, name=f"MLLift{i}")
+    if i < 2:
+        arr = s.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW, Inches(xx + 3.83), Inches(3.9), Inches(0.24), Inches(0.35))
+        arr.fill.solid()
+        arr.fill.fore_color.rgb = GREY
+        arr.line.fill.background()
+        arr.shadow.inherit = False
+        arr.name = f"bg-mlarrow{i}"
+gov = [("user-check", "People decide", "Credit officers approve every ML-referred case"),
+       ("activity", "Monitored", "Drift checks and a monthly back-test against actual repayments"),
+       ("shield-check", "Governed", "Explainable reason codes; model-risk review before go-live")]
+for i, (ic, h_, d) in enumerate(gov):
+    xx = 0.6 + i * 4.1
+    icon(s, ic, xx, 5.75, 0.55, red=False)
+    text(s, xx + 0.7, 5.7, 3.1, 0.35, h_, 14, True, INK, name=f"GovHead{i}")
+    text(s, xx + 0.7, 6.05, 3.1, 0.7, d, 11, False, MUTED, name=f"GovBody{i}")
+
+# ---------------------------------------------------------------- S11c where the business must focus
+order = sorted(range(len(e07)), key=lambda i: -float(e07[i]["approval_uplift_pp"]))
+top2 = derive("focus: top-two lever points", round(sum(sorted([float(r["approval_uplift_pp"]) for r in e07])[-2:]), 1),
+              "sum of two largest E07 approval_uplift_pp")
+s = slide(f"The business should focus on documents and rule declines first: {top2:g} of {PP} points",
+          "Answer", "Three moves, ranked by approval-rate impact, each with one owner and one weekly KPI", None,
+          f"The opportunity is there. What matters now is focus. Two moves, fixing documents at submission and "
+          f"re-scoring rule declines, deliver {top2:g} of the {PP} points, so they get our best people first. "
+          "Speed is the third move. Each has one owner and one number we track every week.")
+focus_rows = {
+    "Invalid documents": ("Fix documents at submission", "Operations + Digital", "Invalid-document rate", "scan-text"),
+    "Rule declines": ("Re-score rule declines", "Credit Risk", "Approvals from re-scored declines", "brain-circuit"),
+    "Cancellations": ("Decide faster", "Consumer Lending operations", "Median days to decision", "zap"),
+}
+for rank, i in enumerate(order):
+    r = e07[i]
+    move, owner, kpi, ic = focus_rows[r["leak"]]
+    yy = 2.35 + rank * 1.4
+    first = rank < 2
+    rect(s, 0.6, yy, 12.1, 1.2, RGBColor(0xFD, 0xE8, 0xE7) if first else LIGHT, f"bg-focus{rank}")
+    text(s, 0.75, yy, 0.6, 1.2, f"{rank + 1}", 30, True, RED if first else MUTED, anchor=MSO_ANCHOR.MIDDLE,
+         name=f"FocusRank{rank}")
+    icon(s, ic, 1.4, yy + 0.3, 0.6, red=first)
+    text(s, 2.2, yy + 0.1, 4.0, 0.5, move, 18, True, INK, name=f"FocusMove{rank}")
+    text(s, 2.2, yy + 0.6, 4.0, 0.5, r["ml_lever"], 12, False, MUTED, name=f"FocusLever{rank}")
+    text(s, 6.3, yy + 0.1, 2.6, 1.0, ["Owner", owner], 13, False, INK, name=f"FocusOwner{rank}")
+    text(s, 9.0, yy + 0.1, 2.3, 1.0, ["Weekly KPI", kpi], 13, False, INK, name=f"FocusKPI{rank}")
+    for tb in (s.shapes[-2], s.shapes[-1]):
+        tb.text_frame.paragraphs[0].runs[0].font.color.rgb = MUTED
+        tb.text_frame.paragraphs[0].runs[0].font.size = Pt(11)
+    text(s, 11.3, yy, 1.3, 1.2, f"+{r['approval_uplift_pp']} pts", 20, True, RED if first else MUTED,
+         PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE, name=f"FocusPts{rank}")
+text(s, 0.6, 6.55, 12.1, 0.35, "Owners are proposed; confirm with each function before presenting. Point lifts are estimates (data/E07).",
+     10, False, MUTED, name="FocusNote")
 
 # ---------------------------------------------------------------- S12
 s = slide("A 12-week pilot on one segment proves it before any permanent rule change", "Plan",
@@ -446,15 +584,16 @@ s = slide("A 12-week pilot on one segment proves it before any permanent rule ch
           "The four workstreams are the four solutions I started from. Each produces a measurable output, "
           "so by week 12 we have measured evidence instead of estimates.")
 rows = [["Workstream", "What we do", "Weeks", "Output"],
-        ["1. Reject diagnostics", "Funnel dashboard by stage, channel and reason code", "1-2", "Weekly leak report"],
-        ["2. Recover current applications", "Call back pending files; document pre-check at submission", "2-12",
-         "Recovered applications"],
-        ["3. Relook reject reasons", "Review rule by rule: which rules decline clean-SLIK applicants", "2-6",
-         "Rule-change candidates"],
-        ["4. A-score targeting", "Bands A-B rule declines go to manual review, capped volume", "4-12",
+        ["1. Diagnostics and data", "Funnel dashboard by stage and reason code; build the labelled data set for the models",
+         "1-2", "Weekly leak report"],
+        ["2. ML document checker", "Pre-check uploads; call back pending and incomplete files", "2-12",
+         "Fewer invalid documents"],
+        ["3. ML fast-track + rule relook", "Express route for low-risk files; review rules that decline clean-SLIK applicants",
+         "2-8", "Shorter decision time; rule-change candidates"],
+        ["4. ML challenger + A-score", "Re-score rule declines; bands A-B to manual review, capped volume", "4-12",
          "Approvals and early DPD vs control"]]
 table(s, 1.45, 2.4, 11.25, rows, col_w=[2.75, 5.0, 0.9, 2.6], size=13, row_h=0.75, name="Workplan")
-for i, nm in enumerate(["chart-column", "file-check", "list-checks", "target"]):
+for i, nm in enumerate(["chart-column", "scan-text", "zap", "brain-circuit"]):
     icon(s, nm, 0.6, 3.15 + i * 0.75 + 0.1, 0.55, red=i == 3)
 
 # ---------------------------------------------------------------- S13
@@ -478,23 +617,23 @@ pilot = {r["item"]: r["value"] for r in data("pilot")}
 s = slide("Decision today: approve the pilot, co-owned by Credit Risk and Consumer Lending", "Plan",
           None, None,
           "This is the one thing I am asking for today. It is small, reversible, and measured: "
-          f"{pilot['analysts']} analysts and {pilot['credit_reviewers']} credit reviewer for {pilot['weeks']} weeks, "
+          f"{pilot['data_scientists']} data scientist, {pilot['analysts']} analysts and {pilot['credit_reviewers']} credit reviewer for {pilot['weeks']} weeks, "
           "no policy change, and a go / no-go decision at the end with real loss data.")
 rect(s, 0.6, 2.2, 12.1, 1.35, LIGHT, "bg-ask")
 rect(s, 0.6, 2.2, 0.1, 1.35, RED, "bg-askrule")
 text(s, 1.0, 2.25, 11.5, 1.25,
-     f"Approve a {pilot['weeks']}-week pilot of document pre-check, a decision-time SLA, and A-score review of "
-     f"rule-based declines, co-owned by Credit Risk and Consumer Lending, starting [{pilot['start']}].",
+     f"Approve a {pilot['weeks']}-week pilot of three ML models (document checker, fast-track, challenger) with "
+     f"A-score review of rule-based declines, co-owned by Credit Risk and Consumer Lending, starting [{pilot['start']}].",
      18, True, INK, anchor=MSO_ANCHOR.MIDDLE, name="Ask")
 cols = [
     ("What you approve", [f"{pilot['weeks']} weeks, one segment: {pilot['segment'].lower()}",
-                          f"Team: {pilot['analysts']} analysts + {pilot['credit_reviewers']} credit reviewer (assumed)",
+                          f"Team: {pilot['data_scientists']} data scientist, {pilot['analysts']} analysts, {pilot['credit_reviewers']} credit reviewer (assumed)",
                           "No policy change; SLIK stays a hard limit"]),
-    ("What you get (est.)", [f"+{round(int(dloans), -1)} loans a month at full scale",
-                             f"About IDR {round(idr)} bn a year in interest income",
-                             f"Fewer of the ~{round(hrs, -3):,} analyst-hours a year lost to cancelled files"]),
+    ("What you get (est.)", [f"Approval rate +{PP} pts ({appr0}% to {appr1}%)",
+                             f"About IDR {BN} bn more disbursement a month",
+                             f"Fewer of the ~{hrs_r:,} analyst-hours a year lost to cancelled files"]),
     ("When you will know", ["Week 2: first weekly leak report",
-                            "Week 6: rule-change candidates to Credit Risk",
+                            "Week 6: models running in shadow mode",
                             f"Week {pilot['weeks']}: go / no-go, with measured loss"]),
 ]
 for i, (h_, items) in enumerate(cols):
@@ -505,20 +644,20 @@ for i, (h_, items) in enumerate(cols):
     text(s, xx, 4.55, 3.8, 2.2, items, 14, False, INK, name=f"AskBody{i}")
 
 # ---------------------------------------------------------------- S16 closing: key takeaways
-team = derive("S16 pilot team size", int(pilot["analysts"]) + int(pilot["credit_reviewers"]),
-              "pilot.csv analysts + credit_reviewers")
-per_month = derive("S16 cost of waiting IDR bn/month (rounded)", round(idr / 12), "S07 exact IDR bn / 12, rounded")
-s = slide(f"Every month we wait forgoes about IDR {per_month} bn; the pilot caps the downside",
+team = derive("S16 pilot team size", int(pilot["data_scientists"]) + int(pilot["analysts"]) + int(pilot["credit_reviewers"]),
+              "pilot.csv data_scientists + analysts + credit_reviewers")
+s = slide(f"Each month of waiting forgoes IDR {BN} bn disbursement; the pilot caps the risk",
           "Plan", "Key takeaways", None,
           "Let me close with three things to remember. First, this leak is ours to fix: most lost applications "
-          "never reach a credit decision. Second, a safe subset exists, and the A-score can find it. Third, the "
-          f"bet is lopsided: we risk {pilot['weeks']} weeks and {team} people under pause triggers, against an "
-          f"estimated IDR {round(idr)} bn a year. Every month we wait costs about IDR {per_month} bn. "
+          "never reach a credit decision. Second, a safe subset exists, and machine learning with the A-score can "
+          f"find it. Third, the bet is lopsided: we risk {pilot['weeks']} weeks and {team} people under pause "
+          f"triggers, against an estimated {PP}-point lift in approval rate. Every month we wait costs about "
+          f"IDR {BN} bn of disbursement. "
           "So my question is simple: can we start the pilot, and can I bring you the first leak report in two weeks?")
 # left: three takeaways
 tk = [("The leak is ours to fix",
        f"{round(proc / lost * 100)}% of lost applications never reach credit review"),
-      ("A safe subset exists",
+      ("A safe subset exists, and ML finds it",
        f"{share}% of rule-declined applicants score as low-risk as our approved book"),
       ("The bet is lopsided",
        "Small, capped and reversible downside against a measured upside")]
@@ -537,22 +676,23 @@ text(s, 6.5, 3.25, 2.8, 2.6, [f"{pilot['weeks']} weeks, one segment", f"{team} p
      13, False, INK, name="RiskBody")
 icon(s, "rocket", 9.8, 2.5, 0.6)
 text(s, 10.5, 2.5, 2.1, 0.6, "What we gain (est.)", 16, True, RED, anchor=MSO_ANCHOR.MIDDLE, name="RewardHead")
-text(s, 9.8, 3.25, 2.8, 2.6, [f"+{round(int(dloans), -1)} loans a month at scale",
-                              f"About IDR {round(idr)} bn a year in interest", "Fewer hours lost to cancelled files",
+text(s, 9.8, 3.25, 2.8, 2.6, [f"Approval rate +{PP} pts ({appr0}% to {appr1}%)",
+                              f"About IDR {BN} bn more disbursement a month", "Fewer hours lost to cancelled files",
                               "Measured evidence for any rule change"],
      13, False, INK, name="RewardBody")
 # bottom: cost of waiting + the ask
 rect(s, 0.6, 6.05, 12.1, 0.75, INK, "bg-close")
 icon(s, "hourglass", 0.75, 6.12, 0.6)
 text(s, 1.5, 6.05, 11.1, 0.75,
-     f"Cost of waiting: about IDR {per_month} bn of interest income a month (est.).  Today: approve the pilot.  "
+     f"Cost of waiting: about IDR {BN} bn of disbursement a month (est.).  Today: approve the pilot.  "
      "Week 2: first leak report.", 14, True, WHITE, anchor=MSO_ANCHOR.MIDDLE, name="CloseBar")
 
 # ---------------------------------------------------------------- Executive summary (built last, moved to slide 2)
 s = slide("We lose more good applicants to our own process than to credit risk", None,
           "Executive summary", None,
           "If you remember one slide, make it this one. Demand is there, but our own funnel loses most of it. "
-          "A safe subset can be won back without raising losses, and a 12-week pilot will prove it. "
+          "Three machine-learning fixes can win part of it back without raising losses, and a 12-week pilot "
+          "will prove it. "
           "Today I am asking for approval of that pilot.", )
 blocks = [
     ("What is happening", [f"Applications grew {g_app}% in 12 months; disbursed loans only {g_dis}%",
@@ -560,9 +700,9 @@ blocks = [
     ("Why", [f"{round(proc / lost * 100)}% of lost applications never reach credit review (documents, slow decisions)",
              f"Internal rules decline {ratio}x more applicants than SLIK",
              f"{share}% of rule-declined applicants score as low-risk as our approved book"]),
-    ("What we propose", [f"{pilot['weeks']}-week pilot: document pre-check, decision SLA, A-score review",
-                         f"Est. +{round(int(dloans), -1)} loans a month and IDR {round(idr)} bn a year, at flat loss",
-                         "Guardrails pause the pilot if early losses rise"]),
+    ("What we propose", [f"{pilot['weeks']}-week pilot: ML document checker, ML fast-track, ML challenger + A-score",
+                         f"Target: approval rate {appr0}% to {appr1}% (+{PP} pts), about IDR {BN} bn more disbursement a month",
+                         "At flat loss: guardrails pause the pilot if early losses rise"]),
 ]
 for i, (h_, items) in enumerate(blocks):
     yy = 2.35 + i * 1.35

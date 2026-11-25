@@ -1,6 +1,15 @@
 number,value,formula
+target approval uplift (pts),5.0,sum E07 approval_uplift_pp
+target disbursement IDR bn/month,2.0,"sum E07 disbursement_idr_bn_per_month, rounded"
+target approval rate %,43,E02 Approved + uplift
+extra loans per month,92,sum E07 extra_loans_per_month
+analyst hours a year on cancelled files,7951,sum E07 analyst_hours_per_year
+share of approvals disbursed %,79,E07 disbursed_per_approved x 100
+analyst hours a year (rounded),8000,"round(hours, -3)"
 S01 application growth %,34,E01 applications_index[last] - 100
 S01 disbursed growth %,6,E01 disbursed_index[last] - 100
+approval rate min %,37.2,min E11 approval_rate_pct
+approval rate max %,38.4,max E11 approval_rate_pct
 S02 lost per 100,70,100 - E02 Disbursed
 S02 biggest drop,28,E02 stage before 'Complete documents' minus 'Complete documents'
 S03 process drop-outs per 100,47,sum E03 lost_per_100 where cause_group=process
@@ -9,12 +18,7 @@ S03 credit declines per 100,23,S03 lost - S03 process
 S03 process share %,67,process / lost x 100
 S04 invalid docs share of process drop-outs %,60,E03 Invalid documents / S03 process x 100
 S06 rule/SLIK ratio,2.8,E06 Internal policy rules / E06 SLIK
-S07 analyst hours (exact),7952,sum E07 analyst_hours
-S07 interest IDR bn (exact),35.1,sum E07 forgone_interest_idr_bn
-S07 title IDR bn (rounded),35,round(S07 exact)
-S07 title hours (rounded),8000,"round(S07 hours, -3)"
 S09 low-risk rule declines,1176,sum E08 rule_declined_count where approved_bad_rate <= book_avg
 S09 low-risk share %,30,S09 count / sum E08 rule_declined_count x 100
-S11 title loans/month (rounded),350,"round(E09 D loans added, -1)"
-S16 pilot team size,3,pilot.csv analysts + credit_reviewers
-S16 cost of waiting IDR bn/month (rounded),3,"S07 exact IDR bn / 12, rounded"
+focus: top-two lever points,4.0,sum of two largest E07 approval_uplift_pp
+S16 pilot team size,4,pilot.csv data_scientists + analysts + credit_reviewers

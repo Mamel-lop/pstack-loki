@@ -1,4 +1,4 @@
-leak,lost_applications_per_year,recoverable_pct,recoverable_loans,avg_ticket_idr_mn,yield_pct,forgone_interest_idr_bn,analyst_hours,hours_per_cancelled_file
-Invalid documents,7812,25,1953,60,14,16.4,0,1.5
-Cancellations,5301,20,1060,60,14,8.9,7952,1.5
-Rule declines (low-risk A-score),3906,30,1172,60,14,9.8,0,1.5
+leak,ml_lever,approval_uplift_pp,applications_per_month,extra_approvals_per_month,disbursed_per_approved,extra_loans_per_month,avg_ticket_idr_mn,disbursement_idr_bn_per_month,analyst_hours_per_year,hours_per_cancelled_file
+Invalid documents,ML document checker at submission,2.0,2325,46.5,0.789,36.7,22,0.81,0,1.5
+Cancellations,ML fast-track for low-risk complete files,1.0,2325,23.2,0.789,18.4,22,0.4,7951,1.5
+Rule declines,ML challenger model + A-score review,2.0,2325,46.5,0.789,36.7,22,0.81,0,1.5

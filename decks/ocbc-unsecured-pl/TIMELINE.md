@@ -7,3 +7,4 @@
 | 2026-11-25       | build   | v0.3: exec summary + approve/get/know ask slide for management; TALK_TRACK.md; review re-run clean | ✓ |
 | 2026-11-25       | build   | charts → images (Google Slides mobile showed broken native charts); Lucide icons on 6 text slides; geometry + grounding clean | ✓ |
 | 2026-11-25       | build   | closing key-takeaways slide (cost of waiting, risk vs gain, ask); geometry + grounding clean | ✓ |
+| 2026-11-25       | build   | v0.5: target +5 pts / IDR 2 bn a month; ML solution slide; approval-rate trend; business-focus slide; visual cover; geometry + grounding clean | ✓ |
