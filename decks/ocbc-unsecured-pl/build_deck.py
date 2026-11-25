@@ -79,7 +79,7 @@ def rect(slide, x, y, w, h, fill, name=None):
     return s
 
 
-def slide(title, act, kicker=None, source=None, notes=""):
+def slide(title, act, kicker=None, source=None, notes="", tag=None):
     s = prs.slides.add_slide(BLANK)
     text(s, 0.6, 0.4, 12.1, 1.15, title, 28, True, INK, anchor=MSO_ANCHOR.BOTTOM, name="Title")
     rect(s, 0.6, 1.62, 1.2, 0.06, RED, "TitleRule")
@@ -87,14 +87,14 @@ def slide(title, act, kicker=None, source=None, notes=""):
         text(s, 0.6, 1.78, 12.1, 0.45, kicker, 16, False, MUTED, name="Kicker")
     if source:
         text(s, 0.6, 6.92, 6.5, 0.35, source, 9, False, MUTED, name="Source")
-    if DUMMY:
-        tag = rect(s, 7.35, 6.97, 2.3, 0.28, RED, "DummyTag")
-        tf = tag.text_frame
+    if DUMMY or tag:
+        tb_ = rect(s, 7.35, 6.97, 2.3, 0.28, MUTED if tag else RED, "DummyTag")
+        tf = tb_.text_frame
         tf.margin_top = tf.margin_bottom = 0
         p = tf.paragraphs[0]
         p.alignment = PP_ALIGN.CENTER
         r = p.add_run()
-        r.text = "ILLUSTRATIVE - DUMMY DATA"
+        r.text = tag or "ILLUSTRATIVE - DUMMY DATA"
         r.font.size, r.font.bold, r.font.name = Pt(9), True, FONT
         r.font.color.rgb = WHITE
     if act:
@@ -264,7 +264,7 @@ drops = [(e02[i]["stage"], int(e02[i - 1]["per_100_applications"]) - int(e02[i][
 big = max(drops, key=lambda d: d[1])
 derive("S02 lost per 100", 100 - disb, "100 - E02 Disbursed")
 derive("S02 biggest drop", big[1], f"E02 stage before '{big[0]}' minus '{big[0]}'")
-callout(s, 10.3, 3.0, 2.5, 1.6, f"{100 - disb} of 100 lost; biggest single drop: {big[1]} at the '{big[0].lower()}' stage")
+callout(s, 10.3, 3.0, 2.5, 1.6, f"{100 - disb} of 100 lost; the biggest drop ({big[1]}) is invalid documents")
 
 # ---------------------------------------------------------------- S03
 proc = sum(int(r["lost_per_100"]) for r in e03 if r["cause_group"] == "process")
@@ -457,7 +457,7 @@ for i, (c, d) in enumerate(crit):
 # ---------------------------------------------------------------- S11
 dloans = c9["Loans added per month"]["D_process_plus_ascore"].lstrip("+")
 derive("S11 title loans/month (rounded)", round(int(dloans), -1), "round(E09 D loans added, -1)")
-s = slide(f"Process fixes plus A-score review add ~{round(int(dloans), -1)} loans monthly at flat loss",
+s = slide(f"Process fixes plus A-score review add an estimated {round(int(dloans), -1)} loans monthly at flat loss",
           "Answer", None, "Source: estimates from data/E07-E09; loss impact from approved-book bad rate by band",
           "Option D is the only one that adds meaningful volume without moving expected loss. Option C adds "
           "more loans, but at a cost in loss we do not want. Doing nothing is not free: we forgo about "
@@ -475,7 +475,7 @@ text(s, 0.6, 6.45, 12.1, 0.4, "Loans added = recoverable loans per year (data/E0
      10, False, MUTED, name="Derivation")
 
 # ---------------------------------------------------------------- S12
-s = slide("A 12-week pilot on one segment proves it before any rule changes", "Plan",
+s = slide("A 12-week pilot on one segment proves it before any permanent rule change", "Plan",
           "Pilot segment: salaried applicants, digital channel. Four workstreams, one per proposed solution", None,
           "The four workstreams are the four solutions I started from. Each produces a measurable output, "
           "so by week 12 we have measured evidence instead of estimates.")
@@ -491,7 +491,7 @@ table(s, 0.6, 2.4, 12.1, rows, col_w=[3.0, 5.3, 1.1, 2.7], size=13, row_h=0.75, 
 
 # ---------------------------------------------------------------- S13
 s = slide("Three guardrails stop the pilot if early losses rise", "Plan",
-          "Pre-agreed triggers: we stop first and discuss second", None,
+          "Pre-agreed triggers: we pause first and discuss second", None,
           "These guardrails are what make the pilot safe to say yes to. If early delinquency rises, "
           "we stop automatically, before any lasting change to policy.")
 g = [("Loss trigger", "Pause if 30+ DPD on pilot approvals exceeds the approved book's rate for the same band"),

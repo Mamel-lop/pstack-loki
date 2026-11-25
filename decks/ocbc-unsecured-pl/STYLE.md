@@ -4,6 +4,7 @@ palette: primary #E2231A (OCBC red; swap in the exact hex from the official temp
          ink #1F1F1F, muted #8C8C8C, light grey #E5E5E5, background #FFFFFF,
          accent = #E2231A, used ONLY for the element that carries each slide's message
 type: display Arial/Helvetica Bold (or the template font) / body Arial
+      titles may wrap to two lines at 28pt (accepted at review C05: one line would cost the numbers)
       min sizes: title 28pt, body 14pt, source 9pt
 chart tokens: grid #E5E5E5 0.5pt; direct labels instead of legends; accent vs grey
       emphasis (~90% grey ink, one red element); bars start at 0; units on every axis (IDR bn, %, days)

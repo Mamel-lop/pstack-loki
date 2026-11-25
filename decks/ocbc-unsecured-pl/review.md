@@ -3,7 +3,7 @@
 Deck: `deck.pptx`, 16 slides, built on ILLUSTRATIVE DUMMY data.
 Disposition policy (default): SEV-1 fix, SEV-2 fix, SEV-3 accept. Render faults are fixed below. Claim-side findings are never auto-fixed; they wait for the author.
 
-**Terminal state: BLOCKED.** Render-side SEV-1 = 0. Five claim-side findings need an author decision (C01–C05).
+**Cycle 1 state: BLOCKED** on five claim decisions (C01–C05). **Cycle 2 state: SHIPPED as a dummy-data draft.** See the end of this file.
 
 ## Fixed this cycle (render side, re-rendered and re-checked)
 
@@ -42,3 +42,19 @@ Disposition policy (default): SEV-1 fix, SEV-2 fix, SEV-3 accept. Render faults 
 4. **Clarity:** no slop lexicon hits; terminology is consistent (process drop-out / credit decline / rule decline). Clarity's lint scripts were *not* run: the sandbox blocked executing the downloaded third-party scripts. The review was done by reading.
 5. **Story:** the Cold Open lands on slide 1 with no agenda; criteria come before the recommendation; "do nothing" is priced; the falsifier is present; option C is real (steelmanned on S08); the ask is restated with owners. The date is still a placeholder.
 6. **Cold read (notes off):** title↔body holds on every slide after R04. Pacing: S04–S07 are four dense exhibits, relieved by S08. The argument can be stated at every act boundary.
+
+## Cycle 2 (2026-11-25): author decisions applied
+
+| ID | Decision | Result |
+|----|----------|--------|
+| C01 | Approved | E09 cell is now "Flat (est.; pilot tests it)"; S11 title says "an estimated 350" |
+| C02 | Approved | `storyline.md` v0.2: ladder synced to the as-built titles |
+| C03 | Approved | S12: "…before any permanent rule change" |
+| C04 | Approved (no peer data) | Kept as is; presenter answers "compared to whom" aloud |
+| C05 | Approved | STYLE.md now allows two-line titles at 28 pt |
+| SEV-3 | Applied | S02 annotation reworded; S13 kicker says "pause", matching the body |
+
+An OJK market-context slide was drafted, then cancelled by the author. Its data and spec were removed.
+
+Re-run after fixes: Lens 1 geometry clean; grounding clean (only the placeholder start date has no CSV home); changed slides (S02, S11–S13) re-eyed at 150 dpi.
+**SEV-1 = 0, SEV-2 all dispositioned → SHIPPED (dummy data; not for decision until the real CSVs replace it).**

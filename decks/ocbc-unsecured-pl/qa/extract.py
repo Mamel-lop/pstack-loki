@@ -6,7 +6,7 @@ for f in glob.glob("data/*.csv"):
     for row in csv.reader(open(f)):
         for c in row:
             for n in re.findall(r"\d[\d,]*\.?\d*", c): vals.add(n.replace(",",""))
-out=open("review_work/deck_text.md","w"); notes=open("review_work/notes.txt","w")
+out=open("qa/deck_text.md","w"); notes=open("qa/notes.txt","w")
 for i,s in enumerate(p.slides):
     texts=[]
     for sh in s.shapes:

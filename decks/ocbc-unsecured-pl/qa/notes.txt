@@ -1,0 +1,32 @@
+Open with one sentence: demand for unsecured loans is rising, but our disbursements are not. Today I will show where those applications go, what that costs us, and a pilot to win part of it back.
+
+Applications went from 2,000 to 2,680 a month. Disbursed loans barely moved, from 680 to 721. So demand is not our constraint: something between application and disbursement is.
+
+Follow 100 applications through the funnel. Only 30 end up as a loan. The rest of this deck is about the 70 we lose, and which of them we could keep.
+
+Of the 70 applications we lose, 47 never reach a credit decision: they fail on documents or the customer cancels. Only the grey part is credit risk doing its job.
+
+Payslips alone cause 38% of document failures. Most of these are fixable at submission: a pre-check that tells the customer what is missing before the file enters the queue.
+
+Our median decision time is 7 days. Once a customer waits past 8 days, roughly a quarter or more cancel, most likely because another bank answered first. [Add a peer SLA here only if you have a dated source.]
+
+SLIK is a hard limit and should stay one. But SLIK declines only 5 in 100. Our own policy rules decline 14, and 81% of those applicants have a clean SLIK record.
+
+This is an estimate, and I show the method so you can challenge each input. The recoverable shares are assumptions; the pilot will measure them.
+
+The obvious answer is to loosen the rules across the board. It is the fastest way to volume, and I want to give it a fair hearing. The problem is that rule declines span every risk band, so loosening everything lets in the riskiest bands too.
+
+The A-score ranks every applicant, including those we declined. 1,176 rule-declined applicants sit in bands A and B, where our approved book's bad rate is at or below the 2.8% average. Caveat: declined applicants have no repayment history, so their risk is inferred from the band. That is why we pilot before changing rules.
+
+Before I show the options, here are the four criteria I will judge them on. I am stating them first so the recommendation has to earn its place against them.
+
+Option D is the only one that adds meaningful volume without moving expected loss. Option C adds more loans, but at a cost in loss we do not want. Doing nothing is not free: we forgo about IDR 35 bn/yr in interest income.
+
+The four workstreams are the four solutions I started from. Each produces a measurable output, so by week 12 we have measured evidence instead of estimates.
+
+These guardrails are what make the pilot safe to say yes to. If early delinquency rises, we stop automatically, before any lasting change to policy.
+
+This is the one thing I am asking for today. If we say yes, the first weekly leak report arrives two weeks after start.
+
+Use this in Q&A when someone asks whether we considered a cause.
+

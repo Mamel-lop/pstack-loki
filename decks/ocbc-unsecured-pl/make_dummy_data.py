@@ -84,7 +84,7 @@ d = round(loans_total / 12)
 idr = round(sum(r[6] for r in e07))
 write("E09.csv", ["criterion", "A_do_nothing", "B_process_only", "C_loosen_all", "D_process_plus_ascore"], [
     ["Loans added per month", "0", f"+{b}", "+420", f"+{d}"],
-    ["Expected loss", "Unchanged", "Unchanged", "+60 bps", "Flat (back-tested)"],
+    ["Expected loss", "Unchanged", "Unchanged", "+60 bps", "Flat (est.; pilot tests it)"],
     ["Cost", f"IDR {idr} bn/yr forgone", "Low", "Low", "Moderate"],
     ["Time to launch", "-", "4-6 weeks", "2 weeks", "8-12 weeks"],
 ])

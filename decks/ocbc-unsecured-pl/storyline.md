@@ -1,6 +1,6 @@
 # storyline.md: OCBC unsecured personal loan
 
-**Status:** v0 DRAFT, awaiting triage. Not frozen: 14 `[TK]` numbers are open (see `triage.md`).
+**Status:** v0.2 DRAFT. Titles are synced to the as-built deck. Numbers are ILLUSTRATIVE DUMMY values, so this is not frozen for real use (see `triage.md`).
 **Built with:** loki-storyline Steps 0–6, with the clarity rewrite pass (Argument register, slides medium) run on the whole ladder.
 
 ## Frame
@@ -36,40 +36,40 @@
 
 ```
 S00 | —   | COVER: "Recovering lost unsecured-loan approvals at OCBC"  (subtitle: Graduate Program final presentation · name · date)
-S01 | I   | Applications grew [TK]% last year; disbursed loans grew only [TK]%
+S01 | I   | Applications grew 34% in 12 months; disbursed loans grew only 6%
             | demand is not the constraint | [D1] | exhibit E01 (two-line index chart) | FACT
      ...therefore
-S02 | I   | Only [TK] of every 100 applications become a disbursed loan
+S02 | I   | Only 30 of every 100 applications become a disbursed loan
             | the gap is inside our funnel | [D1] | exhibit E02 (funnel bar) | FACT
      ...but
-S03 | II  | Most lost applications drop out before credit review, not at it
+S03 | II  | Two in three lost applications drop out before credit review, not at it
             | process drop-outs > credit declines (hypothesis; see triage note 1) | [D1][D2] | exhibit E03 (100% stacked bar) | FACT once [D2] mapped
      ...therefore
-S04 | II  | Invalid documents cause [TK]% of process drop-outs, led by [TK: document]
+S04 | II  | Invalid documents cause 60% of process drop-outs, led by payslips
             | fixable at submission with a pre-check | [D4] | exhibit E04 (horizontal bar) | FACT
      ...but
-S05 | II  | Even complete applicants cancel: our decision takes [TK] days, median
+S05 | II  | Even complete applicants cancel: our decision takes 7 days, median
             | speed loses applicants to faster banks | [D3][D10] | exhibit E05 (histogram, cancels by day) | FACT (peer speed EST)
      ...but
-S06 | II  | At credit review, internal rules decline [TK]x more applicants than SLIK does
+S06 | II  | At credit review, internal rules decline 2.8x more applicants than SLIK does
             | tightness is our policy, not bureau data | [D2][D5] | exhibit E06 (horizontal bar) | FACT
      ...therefore
-S07 | III | These losses cost about IDR [TK] bn interest and [TK] analyst-hours yearly
+S07 | III | These losses cost about IDR 35 bn interest and 8,000 analyst-hours yearly
             | lost approvals × ticket × yield; wasted hours on cancelled files | [D1][D8][D9] | exhibit E07 (waterfall) | EST, method on slide
      ...but
 S08 | III | Loosening rules for everyone would add loans, but also add losses
             | steelman the easy answer; it fails risk appetite | [D7] | none (text + small table) | BELIEF/EST, disclosed
      ...but
-S09 | III | [TK]% of rule-declined applicants score as low-risk as our approved book
+S09 | III | 30% of rule-declined applicants score as low-risk as our approved book
             | A-score finds the safe subset | [D6][D7] | exhibit E08 (bar by A-score band) | FACT
      ...therefore
 S10 | IV  | We judge four options on loans added, loss, cost and launch time
             | criteria stated before the reveal | — | none (criteria table) | —
      ...therefore
-S11 | IV  | Process fixes plus A-score review add [TK] loans monthly at flat loss
+S11 | IV  | Process fixes plus A-score review add an estimated 350 loans monthly at flat loss
             | options matrix; "do nothing" priced; recommendation in accent | [D1][D6][D7][D8] | exhibit E09 (options matrix) | EST
      ...but
-S12 | V   | A [TK]-week pilot on one segment proves it before any rule changes
+S12 | V   | A 12-week pilot on one segment proves it before any permanent rule change
             | 4 workstreams = the 4 proposed solutions | — | none (workplan) | —
      ...but
 S13 | V   | Three guardrails stop the pilot if early losses rise
@@ -88,7 +88,7 @@ or if SLIK, not internal rules, drives most credit declines.*
 | | A. Do nothing | B. Process fixes only | C. Loosen rules for all | **D. Process fixes + A-score review (rec.)** |
 |---|---|---|---|---|
 | Loans added / month | 0 | +[TK] | +[TK] (largest) | +[TK] |
-| Expected loss | unchanged | unchanged | **rises** [TK] bps | flat (back-tested) |
+| Expected loss | unchanged | unchanged | **rises** [TK] bps | flat (est.; pilot tests it) |
 | Cost | forgone IDR [TK] bn/yr | low | low | moderate (analytics + pilot ops) |
 | Time to launch | — | 4–6 wks | 2 wks | 8–12 wks |
 | Why someone would pick it | no risk change | quick, safe | fastest volume | volume without loss |
@@ -137,3 +137,7 @@ or if SLIK, not internal rules, drives most credit declines.*
 - v0.1-dummy (2026-11-25): the author asked to build with dummy numbers. `[TK]` values are filled
   from ILLUSTRATIVE data in `data/*.csv` (`make_dummy_data.py`). The ladder is NOT frozen for real use:
   replace the CSVs with the real pull, re-check every title against them, then close triage.
+- v0.2 (2026-11-25): review decisions applied. C01: "back-tested" became "est.; pilot tests it", and the S11
+  title says "an estimated". C02: ladder synced to the as-built titles (dummy numbers). C03: S12 says
+  "permanent rule change". C05: two-line titles accepted in STYLE.md. An OJK market slide was drafted, then
+  cancelled by the author. Re-touch list: none beyond `deck.pptx`.
