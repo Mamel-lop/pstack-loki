@@ -185,6 +185,27 @@
 - [NOTES] This is the one thing I am asking for today. It is small, reversible, and measured: 2 analysts and 1 credit reviewer for 12 weeks, no policy change, and a go / no-go decision at the end with real loss data.
 
 ## S16
+- [Title] Every month we wait forgoes about IDR 3 bn; the pilot caps the downside
+- [Kicker] Key takeaways
+- [DummyTag] ILLUSTRATIVE - DUMMY DATA
+- [Tracker] Situation  Problem  Stakes  Answer  Plan
+- [TkNum0] 1
+- [TkHead0] The leak is ours to fix
+- [TkBody0] 67% of lost applications never reach credit review
+- [TkNum1] 2
+- [TkHead1] A safe subset exists
+- [TkBody1] 30% of rule-declined applicants score as low-risk as our approved book
+- [TkNum2] 3
+- [TkHead2] The bet is lopsided
+- [TkBody2] Small, capped and reversible downside against a measured upside
+- [RiskHead] What we risk
+- [RiskBody] 12 weeks, one segment / 3 people (assumed) / Capped volume, pause triggers / No policy change: fully reversible
+- [RewardHead] What we gain (est.)
+- [RewardBody] +350 loans a month at scale / About IDR 35 bn a year in interest / Fewer hours lost to cancelled files / Measured evidence for any rule change
+- [CloseBar] Cost of waiting: about IDR 3 bn of interest income a month (est.).  Today: approve the pilot.  Week 2: first leak report.
+- [NOTES] Let me close with three things to remember. First, this leak is ours to fix: most lost applications never reach a credit decision. Second, a safe subset exists, and the A-score can find it. Third, the bet is lopsided: we risk 12 weeks and 3 people under pause triggers, against an estimated IDR 35 bn a year. Every month we wait costs about IDR 3 bn. So my question is simple: can we start the pilot, and can I bring you the first leak report in two weeks?
+
+## S17
 - [Title] Appendix: the issue tree behind the analysis
 - [Kicker] Every lost application leaves through exactly one branch
 - [DummyTag] ILLUSTRATIVE - DUMMY DATA

@@ -1,4 +1,4 @@
-# Talk track: the storyline in plain words (about 15 minutes)
+# Talk track: the storyline in plain words (about 15 minutes; leave the closing slide on screen during Q&A)
 
 **One sentence to remember:** we lose more good applicants to our own process than to credit risk,
 and a safe, measured pilot can win part of them back.
@@ -22,7 +22,8 @@ review of rule-based declines, co-owned by Credit Risk and Consumer Lending."
 | 12 | Options matrix | "Only option D adds loans without adding loss." | "We prove it before changing any rule." |
 | 13 | 12-week pilot | "Four workstreams: the four fixes I started with." | "And if it goes wrong?" |
 | 14 | Guardrails | "We pause first and discuss second." | "So here is my ask." |
-| 15 | Decision | "Small, reversible, measured. Can I have your approval?" | — |
+| 15 | Decision | "Small, reversible, measured. Here's exactly what I'm asking for." | "Let me leave you with three things." |
+| 16 | Key takeaways (close) | "The leak is ours to fix, a safe subset exists, and the bet is lopsided. Every month we wait costs about IDR 3 bn." | End with the question: "Can we start the pilot, and can I bring you the first leak report in two weeks?" Then stop talking and wait. |
 
 ## Questions to expect
 - **"Where do these numbers come from?"** Name the report or SQL table behind each one. Every number in the deck lives in `data/`. The calculated ones are in `data/derived.csv`, with their formulas.

@@ -16,3 +16,5 @@ S07 title hours (rounded),8000,"round(S07 hours, -3)"
 S09 low-risk rule declines,1176,sum E08 rule_declined_count where approved_bad_rate <= book_avg
 S09 low-risk share %,30,S09 count / sum E08 rule_declined_count x 100
 S11 title loans/month (rounded),350,"round(E09 D loans added, -1)"
+S16 pilot team size,3,pilot.csv analysts + credit_reviewers
+S16 cost of waiting IDR bn/month (rounded),3,"S07 exact IDR bn / 12, rounded"

@@ -146,3 +146,6 @@ or if SLIK, not internal rules, drives most credit declines.*
   summary after the cover (answer first, Minto; it is a summary, not an agenda, so the Cold Open rule holds).
   Rebuilt the ask slide as approve / get / know. Pilot resourcing (2 analysts + 1 credit reviewer) is an
   ASSUMPTION in `data/pilot.csv`.
+- v0.4 (2026-11-25): closing slide S16 added for management buy-in: "Every month we wait forgoes about
+  IDR 3 bn; the pilot caps the downside". It has three takeaways, a risk-vs-gain panel, the cost of waiting,
+  and the ask. All of its numbers derive from E07, E09 and pilot.csv (see data/derived.csv).

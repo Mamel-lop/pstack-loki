@@ -504,6 +504,50 @@ for i, (h_, items) in enumerate(cols):
     text(s, xx + 0.7, 4.0, 3.1, 0.5, h_, 18, True, RED if i == 1 else INK, name=f"AskHead{i}")
     text(s, xx, 4.55, 3.8, 2.2, items, 14, False, INK, name=f"AskBody{i}")
 
+# ---------------------------------------------------------------- S16 closing: key takeaways
+team = derive("S16 pilot team size", int(pilot["analysts"]) + int(pilot["credit_reviewers"]),
+              "pilot.csv analysts + credit_reviewers")
+per_month = derive("S16 cost of waiting IDR bn/month (rounded)", round(idr / 12), "S07 exact IDR bn / 12, rounded")
+s = slide(f"Every month we wait forgoes about IDR {per_month} bn; the pilot caps the downside",
+          "Plan", "Key takeaways", None,
+          "Let me close with three things to remember. First, this leak is ours to fix: most lost applications "
+          "never reach a credit decision. Second, a safe subset exists, and the A-score can find it. Third, the "
+          f"bet is lopsided: we risk {pilot['weeks']} weeks and {team} people under pause triggers, against an "
+          f"estimated IDR {round(idr)} bn a year. Every month we wait costs about IDR {per_month} bn. "
+          "So my question is simple: can we start the pilot, and can I bring you the first leak report in two weeks?")
+# left: three takeaways
+tk = [("The leak is ours to fix",
+       f"{round(proc / lost * 100)}% of lost applications never reach credit review"),
+      ("A safe subset exists",
+       f"{share}% of rule-declined applicants score as low-risk as our approved book"),
+      ("The bet is lopsided",
+       "Small, capped and reversible downside against a measured upside")]
+for i, (h_, d) in enumerate(tk):
+    yy = 2.35 + i * 1.25
+    text(s, 0.6, yy, 0.6, 0.6, f"{i + 1}", 30, True, RED, name=f"TkNum{i}")
+    text(s, 1.2, yy, 4.6, 0.45, h_, 17, True, INK, name=f"TkHead{i}")
+    text(s, 1.2, yy + 0.45, 4.6, 0.7, d, 13, False, MUTED, name=f"TkBody{i}")
+# right: risk vs reward panel
+rect(s, 6.3, 2.35, 3.1, 3.55, LIGHT, "bg-risk")
+rect(s, 9.6, 2.35, 3.1, 3.55, RGBColor(0xFD, 0xE8, 0xE7), "bg-reward")
+icon(s, "shield", 6.5, 2.5, 0.6, red=False)
+text(s, 7.2, 2.5, 2.1, 0.6, "What we risk", 16, True, INK, anchor=MSO_ANCHOR.MIDDLE, name="RiskHead")
+text(s, 6.5, 3.25, 2.8, 2.6, [f"{pilot['weeks']} weeks, one segment", f"{team} people (assumed)",
+                              "Capped volume, pause triggers", "No policy change: fully reversible"],
+     13, False, INK, name="RiskBody")
+icon(s, "rocket", 9.8, 2.5, 0.6)
+text(s, 10.5, 2.5, 2.1, 0.6, "What we gain (est.)", 16, True, RED, anchor=MSO_ANCHOR.MIDDLE, name="RewardHead")
+text(s, 9.8, 3.25, 2.8, 2.6, [f"+{round(int(dloans), -1)} loans a month at scale",
+                              f"About IDR {round(idr)} bn a year in interest", "Fewer hours lost to cancelled files",
+                              "Measured evidence for any rule change"],
+     13, False, INK, name="RewardBody")
+# bottom: cost of waiting + the ask
+rect(s, 0.6, 6.05, 12.1, 0.75, INK, "bg-close")
+icon(s, "hourglass", 0.75, 6.12, 0.6)
+text(s, 1.5, 6.05, 11.1, 0.75,
+     f"Cost of waiting: about IDR {per_month} bn of interest income a month (est.).  Today: approve the pilot.  "
+     "Week 2: first leak report.", 14, True, WHITE, anchor=MSO_ANCHOR.MIDDLE, name="CloseBar")
+
 # ---------------------------------------------------------------- Executive summary (built last, moved to slide 2)
 s = slide("We lose more good applicants to our own process than to credit risk", None,
           "Executive summary", None,

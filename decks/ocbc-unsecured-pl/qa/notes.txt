@@ -30,5 +30,7 @@ These guardrails are what make the pilot safe to say yes to. If early delinquenc
 
 This is the one thing I am asking for today. It is small, reversible, and measured: 2 analysts and 1 credit reviewer for 12 weeks, no policy change, and a go / no-go decision at the end with real loss data.
 
+Let me close with three things to remember. First, this leak is ours to fix: most lost applications never reach a credit decision. Second, a safe subset exists, and the A-score can find it. Third, the bet is lopsided: we risk 12 weeks and 3 people under pause triggers, against an estimated IDR 35 bn a year. Every month we wait costs about IDR 3 bn. So my question is simple: can we start the pilot, and can I bring you the first leak report in two weeks?
+
 Use this in Q&A when someone asks whether we considered a cause.
 
