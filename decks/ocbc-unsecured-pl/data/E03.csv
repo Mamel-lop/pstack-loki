@@ -1,1 +1,6 @@
-cause_group,cause,lost_applications,pct_of_lost
+cause_group,cause,lost_per_100,pct_of_lost
+process,Invalid documents,28,40
+process,Cancellations,19,27
+credit,Internal rule declines,14,20
+credit,SLIK,5,7
+credit,No history,4,6

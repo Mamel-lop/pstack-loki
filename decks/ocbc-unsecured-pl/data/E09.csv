@@ -1,1 +1,5 @@
 criterion,A_do_nothing,B_process_only,C_loosen_all,D_process_plus_ascore
+Loans added per month,0,+251,+420,+349
+Expected loss,Unchanged,Unchanged,+60 bps,Flat (back-tested)
+Cost,IDR 35 bn/yr forgone,Low,Low,Moderate
+Time to launch,-,4-6 weeks,2 weeks,8-12 weeks

@@ -1,1 +1,4 @@
-decline_reason,declines,pct_of_credit_declines,slik_current_pct
+decline_reason,per_100_applications,clean_slik_pct
+Internal policy rules,14,81
+SLIK (collectability 2+),5,0
+Thin or no credit history,4,

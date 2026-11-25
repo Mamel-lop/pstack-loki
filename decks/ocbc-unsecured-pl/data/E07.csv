@@ -1,1 +1,4 @@
-leak,lost_loans_per_year,avg_ticket_idr_mn,yield_pct,forgone_interest_idr_bn,analyst_hours
+leak,lost_applications_per_year,recoverable_pct,recoverable_loans,avg_ticket_idr_mn,yield_pct,forgone_interest_idr_bn,analyst_hours
+Invalid documents,7812,25,1953,60,14,16.4,0
+Cancellations,5301,20,1060,60,14,8.9,7952
+Rule declines (low-risk A-score),3906,30,1172,60,14,9.8,0

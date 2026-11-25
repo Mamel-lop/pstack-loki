@@ -1,1 +1,6 @@
-ascore_band,rule_declined_count,approved_count,approved_bad_rate_pct
+ascore_band,rule_declined_count,approved_bad_rate_pct,book_avg_bad_rate_pct
+A (lowest risk),480,1.2,2.8
+B,696,2.0,2.8
+C,980,3.1,2.8
+D,1000,5.5,2.8
+E (highest risk),764,9.8,2.8

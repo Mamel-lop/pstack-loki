@@ -134,3 +134,6 @@ or if SLIK, not internal rules, drives most credit declines.*
 ## Changelog
 
 - v0 (2026-11-25): first compile from the author's notes. Not frozen.
+- v0.1-dummy (2026-11-25): the author asked to build with dummy numbers. `[TK]` values are filled
+  from ILLUSTRATIVE data in `data/*.csv` (`make_dummy_data.py`). The ladder is NOT frozen for real use:
+  replace the CSVs with the real pull, re-check every title against them, then close triage.

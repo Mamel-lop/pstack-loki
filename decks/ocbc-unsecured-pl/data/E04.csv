@@ -1,1 +1,7 @@
-document_type,channel,failures,pct_of_doc_failures
+document_type,pct_of_doc_failures
+Payslip,38
+Bank statement,24
+ID card (KTP),14
+Tax ID (NPWP),12
+Employment letter,8
+Other,4
